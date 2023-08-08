@@ -46,12 +46,11 @@ file(GLOB PC_SRCS pc/*.c)
 set(RELIC_SRCS ${CORE_SRCS})
 
 # 添加sm9.c
-#list(APPEND RELIC_SRCS "sm9.c")
+list(APPEND RELIC_SRCS "sm9.c")
 
 # 添加gmssl文件夹下的所有c文件
-# list(APPEND RELIC_SRCS "sm3.c")
-#file(GLOB TEMP gmssl/*.c)
-#list(APPEND RELIC_SRCS ${TEMP})
+file(GLOB TEMP gmssl/*.c)
+list(APPEND RELIC_SRCS ${TEMP})
 
 #if (TESTS GREATER 0)
 #    list(APPEND RELIC_SRCS "relic_test.c")

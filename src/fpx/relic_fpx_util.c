@@ -236,18 +236,18 @@ void fp4_set_dig(fp4_t a, dig_t b) {
 	fp2_set_dig(a[0], b);
 	fp2_zero(a[1]);
 }
-//
-//void fp6_copy(fp6_t c, fp6_t a) {
-//	fp2_copy(c[0], a[0]);
-//	fp2_copy(c[1], a[1]);
-//	fp2_copy(c[2], a[2]);
-//}
-//
-//void fp6_zero(fp6_t a) {
-//	fp2_zero(a[0]);
-//	fp2_zero(a[1]);
-//	fp2_zero(a[2]);
-//}
+
+void fp6_copy(fp6_t c, fp6_t a) {
+	fp2_copy(c[0], a[0]);
+	fp2_copy(c[1], a[1]);
+	fp2_copy(c[2], a[2]);
+}
+
+void fp6_zero(fp6_t a) {
+	fp2_zero(a[0]);
+	fp2_zero(a[1]);
+	fp2_zero(a[2]);
+}
 //
 //int fp6_is_zero(fp6_t a) {
 //	return fp2_is_zero(a[0]) && fp2_is_zero(a[1]) && fp2_is_zero(a[2]);
@@ -259,41 +259,41 @@ void fp4_set_dig(fp4_t a, dig_t b) {
 //	fp2_rand(a[2]);
 //}
 //
-//void fp6_print(fp6_t a) {
-//	fp2_print(a[0]);
-//	fp2_print(a[1]);
-//	fp2_print(a[2]);
-//}
+void fp6_print(fp6_t a) {
+	fp2_print(a[0]);
+	fp2_print(a[1]);
+	fp2_print(a[2]);
+}
 //
 //int fp6_size_bin(fp6_t a) {
 //	return 6 * RLC_FP_BYTES;
 //}
 //
-//void fp6_read_bin(fp6_t a, const uint8_t *bin, int len) {
-//	if (len != 6 * RLC_FP_BYTES) {
-//		RLC_THROW(ERR_NO_BUFFER);
-//		return;
-//	}
-//	fp2_read_bin(a[0], bin, 2 * RLC_FP_BYTES);
-//	fp2_read_bin(a[1], bin + 2 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
-//	fp2_read_bin(a[2], bin + 4 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
-//}
-//
-//void fp6_write_bin(uint8_t *bin, int len, fp6_t a) {
-//	if (len != 6 * RLC_FP_BYTES) {
-//		RLC_THROW(ERR_NO_BUFFER);
-//		return;
-//	}
-//	fp2_write_bin(bin, 2 * RLC_FP_BYTES, a[0], 0);
-//	fp2_write_bin(bin + 2 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[1], 0);
-//	fp2_write_bin(bin + 4 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[2], 0);
-//}
-//
-//void fp6_set_dig(fp6_t a, dig_t b) {
-//	fp2_set_dig(a[0], b);
-//	fp2_zero(a[1]);
-//	fp2_zero(a[2]);
-//}
+void fp6_read_bin(fp6_t a, const uint8_t *bin, int len) {
+	if (len != 6 * RLC_FP_BYTES) {
+		RLC_THROW(ERR_NO_BUFFER);
+		return;
+	}
+	fp2_read_bin(a[0], bin, 2 * RLC_FP_BYTES);
+	fp2_read_bin(a[1], bin + 2 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
+	fp2_read_bin(a[2], bin + 4 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
+}
+
+void fp6_write_bin(uint8_t *bin, int len, fp6_t a) {
+	if (len != 6 * RLC_FP_BYTES) {
+		RLC_THROW(ERR_NO_BUFFER);
+		return;
+	}
+	fp2_write_bin(bin, 2 * RLC_FP_BYTES, a[0], 0);
+	fp2_write_bin(bin + 2 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[1], 0);
+	fp2_write_bin(bin + 4 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[2], 0);
+}
+
+void fp6_set_dig(fp6_t a, dig_t b) {
+	fp2_set_dig(a[0], b);
+	fp2_zero(a[1]);
+	fp2_zero(a[2]);
+}
 //
 //void fp8_copy(fp8_t c, fp8_t a) {
 //	fp4_copy(c[0], a[0]);
@@ -412,10 +412,10 @@ void fp4_set_dig(fp4_t a, dig_t b) {
 //	fp3_zero(a[2]);
 //}
 //
-//void fp12_copy(fp12_t c, fp12_t a) {
-//	fp6_copy(c[0], a[0]);
-//	fp6_copy(c[1], a[1]);
-//}
+void fp12_copy(fp12_t c, fp12_t a) {
+	fp6_copy(c[0], a[0]);
+	fp6_copy(c[1], a[1]);
+}
 //
 //void fp12_zero(fp12_t a) {
 //	fp6_zero(a[0]);
@@ -431,10 +431,10 @@ void fp4_set_dig(fp4_t a, dig_t b) {
 //	fp6_rand(a[1]);
 //}
 //
-//void fp12_print(fp12_t a) {
-//	fp6_print(a[0]);
-//	fp6_print(a[1]);
-//}
+void fp12_print(fp12_t a) {
+	fp6_print(a[0]);
+	fp6_print(a[1]);
+}
 //
 //int fp12_size_bin(fp12_t a, int pack) {
 //	if (pack) {
@@ -447,62 +447,62 @@ void fp4_set_dig(fp4_t a, dig_t b) {
 //		return 12 * RLC_FP_BYTES;
 //	}
 //}
-//
-//void fp12_read_bin(fp12_t a, const uint8_t *bin, int len) {
-//	if (len != 8 * RLC_FP_BYTES && len != 12 * RLC_FP_BYTES) {
-//		RLC_THROW(ERR_NO_BUFFER);
-//		return;
-//	}
-//	if (len == 8 * RLC_FP_BYTES) {
-//		fp2_zero(a[0][0]);
-//		fp2_read_bin(a[0][1], bin, 2 * RLC_FP_BYTES);
-//		fp2_read_bin(a[0][2], bin + 2 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
-//		fp2_read_bin(a[1][0], bin + 4 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
-//		fp2_zero(a[1][1]);
-//		fp2_read_bin(a[1][2], bin + 6 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
-//		fp12_back_cyc(a, a);
-//	}
-//	if (len == 12 * RLC_FP_BYTES) {
-//		fp6_read_bin(a[0], bin, 6 * RLC_FP_BYTES);
-//		fp6_read_bin(a[1], bin + 6 * RLC_FP_BYTES, 6 * RLC_FP_BYTES);
-//	}
-//}
-//
-//void fp12_write_bin(uint8_t *bin, int len, fp12_t a, int pack) {
-//	fp12_t t;
-//
-//	fp12_null(t);
-//
-//	RLC_TRY {
-//		fp12_new(t);
-//
-//		if (pack) {
-//			if (len != 8 * RLC_FP_BYTES) {
-//				RLC_THROW(ERR_NO_BUFFER);
-//			}
-//			fp12_pck(t, a);
-//			fp2_write_bin(bin, 2 * RLC_FP_BYTES, a[0][1], 0);
-//			fp2_write_bin(bin + 2 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[0][2], 0);
-//			fp2_write_bin(bin + 4 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[1][0], 0);
-//			fp2_write_bin(bin + 6 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[1][2], 0);
-//		} else {
-//			if (len != 12 * RLC_FP_BYTES) {
-//				RLC_THROW(ERR_NO_BUFFER);
-//			}
-//			fp6_write_bin(bin, 6 * RLC_FP_BYTES, a[0]);
-//			fp6_write_bin(bin + 6 * RLC_FP_BYTES, 6 * RLC_FP_BYTES, a[1]);
-//		}
-//	} RLC_CATCH_ANY {
-//		RLC_THROW(ERR_CAUGHT);
-//	} RLC_FINALLY {
-//		fp12_free(t);
-//	}
-//}
-//
-//void fp12_set_dig(fp12_t a, dig_t b) {
-//	fp6_set_dig(a[0], b);
-//	fp6_zero(a[1]);
-//}
+
+void fp12_read_bin(fp12_t a, const uint8_t *bin, int len) {
+	if (len != 8 * RLC_FP_BYTES && len != 12 * RLC_FP_BYTES) {
+		RLC_THROW(ERR_NO_BUFFER);
+		return;
+	}
+	if (len == 8 * RLC_FP_BYTES) {
+		fp2_zero(a[0][0]);
+		fp2_read_bin(a[0][1], bin, 2 * RLC_FP_BYTES);
+		fp2_read_bin(a[0][2], bin + 2 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
+		fp2_read_bin(a[1][0], bin + 4 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
+		fp2_zero(a[1][1]);
+		fp2_read_bin(a[1][2], bin + 6 * RLC_FP_BYTES, 2 * RLC_FP_BYTES);
+		fp12_back_cyc(a, a);
+	}
+	if (len == 12 * RLC_FP_BYTES) {
+		fp6_read_bin(a[0], bin, 6 * RLC_FP_BYTES);
+		fp6_read_bin(a[1], bin + 6 * RLC_FP_BYTES, 6 * RLC_FP_BYTES);
+	}
+}
+
+void fp12_write_bin(uint8_t *bin, int len, fp12_t a, int pack) {
+	fp12_t t;
+
+	fp12_null(t);
+
+	RLC_TRY {
+		fp12_new(t);
+
+		if (pack) {
+			if (len != 8 * RLC_FP_BYTES) {
+				RLC_THROW(ERR_NO_BUFFER);
+			}
+			fp12_pck(t, a);
+			fp2_write_bin(bin, 2 * RLC_FP_BYTES, a[0][1], 0);
+			fp2_write_bin(bin + 2 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[0][2], 0);
+			fp2_write_bin(bin + 4 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[1][0], 0);
+			fp2_write_bin(bin + 6 * RLC_FP_BYTES, 2 * RLC_FP_BYTES, a[1][2], 0);
+		} else {
+			if (len != 12 * RLC_FP_BYTES) {
+				RLC_THROW(ERR_NO_BUFFER);
+			}
+			fp6_write_bin(bin, 6 * RLC_FP_BYTES, a[0]);
+			fp6_write_bin(bin + 6 * RLC_FP_BYTES, 6 * RLC_FP_BYTES, a[1]);
+		}
+	} RLC_CATCH_ANY {
+		RLC_THROW(ERR_CAUGHT);
+	} RLC_FINALLY {
+		fp12_free(t);
+	}
+}
+
+void fp12_set_dig(fp12_t a, dig_t b) {
+	fp6_set_dig(a[0], b);
+	fp6_zero(a[1]);
+}
 //
 //void fp18_copy(fp18_t c, fp18_t a) {
 //	fp9_copy(c[0], a[0]);

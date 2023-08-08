@@ -153,18 +153,18 @@ void fp4_neg(fp4_t c, fp4_t a) {
 	fp2_neg(c[1], a[1]);
 }
 
-//void fp6_add(fp6_t c, fp6_t a, fp6_t b) {
-//	fp2_add(c[0], a[0], b[0]);
-//	fp2_add(c[1], a[1], b[1]);
-//	fp2_add(c[2], a[2], b[2]);
-//}
-//
-//void fp6_sub(fp6_t c, fp6_t a, fp6_t b) {
-//	fp2_sub(c[0], a[0], b[0]);
-//	fp2_sub(c[1], a[1], b[1]);
-//	fp2_sub(c[2], a[2], b[2]);
-//}
-//
+void fp6_add(fp6_t c, fp6_t a, fp6_t b) {
+	fp2_add(c[0], a[0], b[0]);
+	fp2_add(c[1], a[1], b[1]);
+	fp2_add(c[2], a[2], b[2]);
+}
+
+void fp6_sub(fp6_t c, fp6_t a, fp6_t b) {
+	fp2_sub(c[0], a[0], b[0]);
+	fp2_sub(c[1], a[1], b[1]);
+	fp2_sub(c[2], a[2], b[2]);
+}
+
 //void fp6_dbl(fp6_t c, fp6_t a) {
 //	fp2_dbl(c[0], a[0]);
 //	fp2_dbl(c[1], a[1]);

@@ -84,14 +84,14 @@ int fp2_upk(fp2_t c, fp2_t a) {
 	}
 }
 
-//void fp12_pck(fp12_t c, fp12_t a) {
-//	fp12_copy(c, a);
-//	if (fp12_test_cyc(c)) {
-//		fp2_zero(c[0][0]);
-//		fp2_zero(c[1][1]);
-//	}
-//}
-//
+void fp12_pck(fp12_t c, fp12_t a) {
+	fp12_copy(c, a);
+	if (fp12_test_cyc(c)) {
+		fp2_zero(c[0][0]);
+		fp2_zero(c[1][1]);
+	}
+}
+
 //int fp12_upk(fp12_t c, fp12_t a) {
 //	if (fp2_is_zero(a[0][0]) && fp2_is_zero(a[1][1])) {
 //		fp12_back_cyc(c, a);

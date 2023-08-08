@@ -121,7 +121,7 @@ int core_init(void) {
     core_ctx->code = RLC_OK;
 
 //    RLC_TRY {
-//        arch_init();
+        arch_init();
 //        rand_init();
 //
 //#if BENCH > 0
@@ -153,10 +153,10 @@ int core_init(void) {
 //        return RLC_ERR;
 //    }
 //
-//    return RLC_OK;
-//}
-//
-//int core_clean(void) {
+    return RLC_OK;
+}
+
+int core_clean(void) {
 //#ifdef WITH_FP
 //    fp_prime_clean();
 //#endif

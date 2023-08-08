@@ -42,16 +42,16 @@
 #include <ctype.h>
 
 #include "relic_err.h"
-//#include "relic_bn.h"
+#include "relic_bn.h"
 //#include "relic_eb.h"
 //#include "relic_epx.h"
 //#include "relic_ed.h"
-//#include "relic_pc.h"
+#include "relic_pc.h"
 #include "relic_conf.h"
 //#include "relic_bench.h"
-//#include "relic_rand.h"
+#include "relic_rand.h"
 #include "relic_label.h"
-//#include "relic_alloc.h"
+#include "relic_alloc.h"
 
 /*============================================================================*/
 /* Constant definitions                                                       */
@@ -211,157 +211,157 @@ typedef struct _ctx_t {
 //#endif /* EB_PRECO */
 //#endif /* WITH_EB */
 //
-//#ifdef WITH_FP
-//    /** Identifier of the currently configured prime field. */
-//    int fp_id;
-//    /** Prime modulus. */
-//    bn_st prime;
-//    /** Parameter for generating prime. */
-//    bn_st par;
-//    /** Parameter in sparse form. */
-//    int par_sps[RLC_TERMS + 1];
-//    /** Length of sparse prime representation. */
-//    int par_len;
-//#if FP_RDC == MONTY || !defined(STRIP)
-//    /** Value (R^2 mod p) for converting small integers to Montgomery form. */
-//    bn_st conv;
-//    /** Value of constant one in Montgomery form. */
-//    bn_st one;
-//#endif /* FP_RDC == MONTY */
-//#if FP_INV == JUMPDS || !defined(STRIP)
-//    /** Value of constant for divstep-based inversion. */
-//    bn_st inv;
-//#endif /* FP_INV */
-//    /** Prime modulus modulo 8. */
-//    dig_t mod8;
-//    /** Value derived from the prime used for modular reduction. */
-//    dig_t u;
-//    /** Quadratic non-residue. */
-//    int qnr;
-//    /** Cubic non-residue. */
-//    int cnr;
-//    /** 2-adicity. */
-//    int ad2;
-//#if FP_RDC == QUICK || !defined(STRIP)
-//    /** Sparse representation of prime modulus. */
-//    int sps[RLC_TERMS + 1];
-//    /** Length of sparse prime representation. */
-//    int sps_len;
-//#endif /* FP_RDC == QUICK */
-//#endif /* WITH_FP */
+#ifdef WITH_FP
+    /** Identifier of the currently configured prime field. */
+    int fp_id;
+    /** Prime modulus. */
+    bn_st prime;
+    /** Parameter for generating prime. */
+    bn_st par;
+    /** Parameter in sparse form. */
+    int par_sps[RLC_TERMS + 1];
+    /** Length of sparse prime representation. */
+    int par_len;
+#if FP_RDC == MONTY || !defined(STRIP)
+    /** Value (R^2 mod p) for converting small integers to Montgomery form. */
+    bn_st conv;
+    /** Value of constant one in Montgomery form. */
+    bn_st one;
+#endif /* FP_RDC == MONTY */
+#if FP_INV == JUMPDS || !defined(STRIP)
+    /** Value of constant for divstep-based inversion. */
+    bn_st inv;
+#endif /* FP_INV */
+    /** Prime modulus modulo 8. */
+    dig_t mod8;
+    /** Value derived from the prime used for modular reduction. */
+    dig_t u;
+    /** Quadratic non-residue. */
+    int qnr;
+    /** Cubic non-residue. */
+    int cnr;
+    /** 2-adicity. */
+    int ad2;
+#if FP_RDC == QUICK || !defined(STRIP)
+    /** Sparse representation of prime modulus. */
+    int sps[RLC_TERMS + 1];
+    /** Length of sparse prime representation. */
+    int sps_len;
+#endif /* FP_RDC == QUICK */
+#endif /* WITH_FP */
 //
-//#ifdef WITH_EP
-//    /** Identifier of the currently configured prime elliptic curve. */
-//    int ep_id;
-//    /** The a-coefficient of the elliptic curve. */
-//    fp_st ep_a;
-//    /** The b-coefficient of the elliptic curve. */
-//    fp_st ep_b;
-//    /** The value 3b used in elliptic curve arithmetic. */
-//    fp_st ep_b3;
-//    /** The generator of the elliptic curve. */
-//    ep_st ep_g;
-//    /** The order of the group of points in the elliptic curve. */
-//    bn_st ep_r;
-//    /** The cofactor of the group order in the elliptic curve. */
-//    bn_st ep_h;
-//    /** The distinguished non-square used by the mapping function */
-//    fp_st ep_map_u;
-//    /** Precomputed constants for hashing. */
-//    fp_st ep_map_c[4];
-//#ifdef EP_ENDOM
-//#if EP_MUL == LWNAF || EP_FIX == COMBS || EP_FIX == LWNAF || EP_SIM == INTER || !defined(STRIP)
-//    /** Parameters required by the GLV method. @{ */
-//    fp_st beta;
-//    bn_st ep_v1[3];
-//    bn_st ep_v2[3];
-//    /** @} */
-//#endif /* EP_MUL */
-//#endif /* EP_ENDOM */
-//    /** Optimization identifier for the a-coefficient. */
-//    int ep_opt_a;
-//    /** Optimization identifier for the b-coefficient. */
-//    int ep_opt_b;
-//    /** Optimization identifier for the b3 value. */
-//    int ep_opt_b3;
-//    /** Flag that stores if the prime curve has efficient endomorphisms. */
-//    int ep_is_endom;
-//    /** Flag that stores if the prime curve is supersingular. */
-//    int ep_is_super;
-//    /** Flag that stores if the prime curve is pairing-friendly. */
-//    int ep_is_pairf;
-//    /** Flag that indicates whether this curve uses an isogeny for the SSWU mapping. */
-//    int ep_is_ctmap;
-//#ifdef EP_PRECO
-//    /** Precomputation table for generator multiplication. */
-//    ep_st ep_pre[RLC_EP_TABLE];
-//    /** Array of pointers to the precomputation table. */
-//    ep_st *ep_ptr[RLC_EP_TABLE];
-//#endif /* EP_PRECO */
-//#ifdef EP_CTMAP
-//    /** The isogeny map coefficients for the SSWU mapping. */
-//    iso_st ep_iso;
-//#endif /* EP_CTMAP */
-//#endif /* WITH_EP */
-//
-//#ifdef WITH_EPX
-//    /** The generator of the elliptic curve. */
-//    ep2_t ep2_g;
-//    /** The 'a' coefficient of the curve. */
-//    fp2_t ep2_a;
-//    /** The 'b' coefficient of the curve. */
-//    fp2_t ep2_b;
-//    /** The order of the group of points in the elliptic curve. */
-//    bn_st ep2_r;
-//    /** The cofactor of the group order in the elliptic curve. */
-//    bn_st ep2_h;
-//    /** The distinguished non-square used by the mapping function */
-//    fp2_t ep2_map_u;
-//    /** The constants needed for hashing. */
-//    fp2_t ep2_map_c[4];
-//    /** The constants needed for Frobenius. */
-//    fp2_t ep2_frb[2];
-//    /** Optimization identifier for the a-coefficient. */
-//    int ep2_opt_a;
-//    /** Optimization identifier for the b-coefficient. */
-//    int ep2_opt_b;
-//    /** Flag that stores if the prime curve is a twist. */
-//    int ep2_is_twist;
-//    /** Flag that indicates whether this curve uses an isogeny for the SSWU mapping. */
-//    int ep2_is_ctmap;
-//#ifdef EP_PRECO
-//    /** Precomputation table for generator multiplication.*/
-//    ep2_st ep2_pre[RLC_EP_TABLE];
-//    /** Array of pointers to the precomputation table. */
-//    ep2_st *ep2_ptr[RLC_EP_TABLE];
-//#endif /* EP_PRECO */
-//#ifdef EP_CTMAP
-//    /** The isogeny map coefficients for the SSWU mapping. */
-//    iso2_st ep2_iso;
-//#endif /* EP_CTMAP */
-//    /** The generator of the elliptic curve. */
-//    ep4_t ep4_g;
-//    /** The 'a' coefficient of the curve. */
-//    fp4_t ep4_a;
-//    /** The 'b' coefficient of the curve. */
-//    fp4_t ep4_b;
-//    /** The order of the group of points in the elliptic curve. */
-//    bn_st ep4_r;
-//    /** The cofactor of the group order in the elliptic curve. */
-//    bn_st ep4_h;
-//    /** Optimization identifier for the a-coefficient. */
-//    int ep4_opt_a;
-//    /** Optimization identifier for the b-coefficient. */
-//    int ep4_opt_b;
-//    /** Flag that stores if the prime curve is a twist. */
-//    int ep4_is_twist;
-//#ifdef EP_PRECO
-//    /** Precomputation table for generator multiplication.*/
-//    ep4_st ep4_pre[RLC_EP_TABLE];
-//    /** Array of pointers to the precomputation table. */
-//    ep4_st *ep4_ptr[RLC_EP_TABLE];
-//#endif /* EP_PRECO */
-//#endif /* WITH_EPX */
+#ifdef WITH_EP
+    /** Identifier of the currently configured prime elliptic curve. */
+    int ep_id;
+    /** The a-coefficient of the elliptic curve. */
+    fp_st ep_a;
+    /** The b-coefficient of the elliptic curve. */
+    fp_st ep_b;
+    /** The value 3b used in elliptic curve arithmetic. */
+    fp_st ep_b3;
+    /** The generator of the elliptic curve. */
+    ep_st ep_g;
+    /** The order of the group of points in the elliptic curve. */
+    bn_st ep_r;
+    /** The cofactor of the group order in the elliptic curve. */
+    bn_st ep_h;
+    /** The distinguished non-square used by the mapping function */
+    fp_st ep_map_u;
+    /** Precomputed constants for hashing. */
+    fp_st ep_map_c[4];
+#ifdef EP_ENDOM
+#if EP_MUL == LWNAF || EP_FIX == COMBS || EP_FIX == LWNAF || EP_SIM == INTER || !defined(STRIP)
+    /** Parameters required by the GLV method. @{ */
+    fp_st beta;
+    bn_st ep_v1[3];
+    bn_st ep_v2[3];
+    /** @} */
+#endif /* EP_MUL */
+#endif /* EP_ENDOM */
+    /** Optimization identifier for the a-coefficient. */
+    int ep_opt_a;
+    /** Optimization identifier for the b-coefficient. */
+    int ep_opt_b;
+    /** Optimization identifier for the b3 value. */
+    int ep_opt_b3;
+    /** Flag that stores if the prime curve has efficient endomorphisms. */
+    int ep_is_endom;
+    /** Flag that stores if the prime curve is supersingular. */
+    int ep_is_super;
+    /** Flag that stores if the prime curve is pairing-friendly. */
+    int ep_is_pairf;
+    /** Flag that indicates whether this curve uses an isogeny for the SSWU mapping. */
+    int ep_is_ctmap;
+#ifdef EP_PRECO
+    /** Precomputation table for generator multiplication. */
+    ep_st ep_pre[RLC_EP_TABLE];
+    /** Array of pointers to the precomputation table. */
+    ep_st *ep_ptr[RLC_EP_TABLE];
+#endif /* EP_PRECO */
+#ifdef EP_CTMAP
+    /** The isogeny map coefficients for the SSWU mapping. */
+    iso_st ep_iso;
+#endif /* EP_CTMAP */
+#endif /* WITH_EP */
+
+#ifdef WITH_EPX
+    /** The generator of the elliptic curve. */
+    ep2_t ep2_g;
+    /** The 'a' coefficient of the curve. */
+    fp2_t ep2_a;
+    /** The 'b' coefficient of the curve. */
+    fp2_t ep2_b;
+    /** The order of the group of points in the elliptic curve. */
+    bn_st ep2_r;
+    /** The cofactor of the group order in the elliptic curve. */
+    bn_st ep2_h;
+    /** The distinguished non-square used by the mapping function */
+    fp2_t ep2_map_u;
+    /** The constants needed for hashing. */
+    fp2_t ep2_map_c[4];
+    /** The constants needed for Frobenius. */
+    fp2_t ep2_frb[2];
+    /** Optimization identifier for the a-coefficient. */
+    int ep2_opt_a;
+    /** Optimization identifier for the b-coefficient. */
+    int ep2_opt_b;
+    /** Flag that stores if the prime curve is a twist. */
+    int ep2_is_twist;
+    /** Flag that indicates whether this curve uses an isogeny for the SSWU mapping. */
+    int ep2_is_ctmap;
+#ifdef EP_PRECO
+    /** Precomputation table for generator multiplication.*/
+    ep2_st ep2_pre[RLC_EP_TABLE];
+    /** Array of pointers to the precomputation table. */
+    ep2_st *ep2_ptr[RLC_EP_TABLE];
+#endif /* EP_PRECO */
+#ifdef EP_CTMAP
+    /** The isogeny map coefficients for the SSWU mapping. */
+    iso2_st ep2_iso;
+#endif /* EP_CTMAP */
+    /** The generator of the elliptic curve. */
+    ep4_t ep4_g;
+    /** The 'a' coefficient of the curve. */
+    fp4_t ep4_a;
+    /** The 'b' coefficient of the curve. */
+    fp4_t ep4_b;
+    /** The order of the group of points in the elliptic curve. */
+    bn_st ep4_r;
+    /** The cofactor of the group order in the elliptic curve. */
+    bn_st ep4_h;
+    /** Optimization identifier for the a-coefficient. */
+    int ep4_opt_a;
+    /** Optimization identifier for the b-coefficient. */
+    int ep4_opt_b;
+    /** Flag that stores if the prime curve is a twist. */
+    int ep4_is_twist;
+#ifdef EP_PRECO
+    /** Precomputation table for generator multiplication.*/
+    ep4_st ep4_pre[RLC_EP_TABLE];
+    /** Array of pointers to the precomputation table. */
+    ep4_st *ep4_ptr[RLC_EP_TABLE];
+#endif /* EP_PRECO */
+#endif /* WITH_EPX */
 //
 //#ifdef WITH_ED
 //    /** Identifier of the currently configured Edwards elliptic curve. */
@@ -387,26 +387,26 @@ typedef struct _ctx_t {
 //#endif /* ED_PRECO */
 //#endif
 //
-//#if defined(WITH_FPX) || defined(WITH_PP)
-//    /** Integer part of the quadratic non-residue. */
-//    dis_t qnr2;
-//    /** Constants for computing Frobenius maps in higher extensions. @{ */
-//    fp2_st fp2_p1[5];
-//    fp2_st fp2_p2[3];
-//    int frb4;
-//    fp2_st fp4_p1;
-//    /** @} */
-//    /** Constants for computing Frobenius maps in higher extensions. @{ */
-//    int frb3[3];
-//    fp_st fp3_p0[2];
-//    fp_st fp3_p1[5];
-//    fp_st fp3_p2[2];
-//    /** @} */
-//#endif /* WITH_PP */
-//
-//#if defined(WITH_PC)
-//    gt_t gt_g;
-//#endif
+#if defined(WITH_FPX) || defined(WITH_PP)
+    /** Integer part of the quadratic non-residue. */
+    dis_t qnr2;
+    /** Constants for computing Frobenius maps in higher extensions. @{ */
+    fp2_st fp2_p1[5];
+    fp2_st fp2_p2[3];
+    int frb4;
+    fp2_st fp4_p1;
+    /** @} */
+    /** Constants for computing Frobenius maps in higher extensions. @{ */
+    int frb3[3];
+    fp_st fp3_p0[2];
+    fp_st fp3_p1[5];
+    fp_st fp3_p2[2];
+    /** @} */
+#endif /* WITH_PP */
+
+#if defined(WITH_PC)
+    gt_t gt_g;
+#endif
 //
 //#if BENCH > 0
 //    /** Stores the time measured before the execution of the benchmark. */
@@ -420,18 +420,18 @@ typedef struct _ctx_t {
 //	ull_t over;
 //#endif
 //#endif
-//
-//#if RAND != CALL
-//    /** Internal state of the PRNG. */
-//    uint8_t rand[RLC_RAND_SIZE];
-//#else
-//    void (*rand_call)(uint8_t *, int, void *);
-//	void *rand_args;
-//#endif
-//    /** Flag to indicate if PRNG is seed. */
-//    int seeded;
-//    /** Counter to keep track of number of calls since last seeding. */
-//    int counter;
+
+#if RAND != CALL
+    /** Internal state of the PRNG. */
+    uint8_t rand[RLC_RAND_SIZE];
+#else
+    void (*rand_call)(uint8_t *, int, void *);
+	void *rand_args;
+#endif
+    /** Flag to indicate if PRNG is seed. */
+    int seeded;
+    /** Counter to keep track of number of calls since last seeding. */
+    int counter;
 //
 //#if TIMER == PERF
 //    /** File descriptor for perf system call. */
@@ -441,11 +441,11 @@ typedef struct _ctx_t {
 //#endif
 //
 //    /** Function pointer to underlying lznct implementation. */
-//#if ARCH == X86
-//    unsigned int (*lzcnt_ptr)(unsigned int);
-//#elif ARCH == X64
-//    unsigned int (*lzcnt_ptr)(ull_t);
-//#endif
+#if ARCH == X86
+    unsigned int (*lzcnt_ptr)(unsigned int);
+#elif ARCH == X64
+    unsigned int (*lzcnt_ptr)(ull_t);
+#endif
 } ctx_t;
 
 /*============================================================================*/

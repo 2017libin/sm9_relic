@@ -40,12 +40,12 @@
 #include "relic_types.h"
 #include "relic_err.h"
 #include "relic_arch.h"
-//#include "relic_fp.h"
+#include "relic_fp.h"
 //#include "relic_fb.h"
-//#include "relic_ep.h"
+#include "relic_ep.h"
 //#include "relic_eb.h"
 //#include "relic_cp.h"
-//#include "relic_pp.h"
+#include "relic_pp.h"
 
 /*============================================================================*/
 /* Private definitions                                                        */
@@ -120,7 +120,7 @@ int core_init(void) {
 
     core_ctx->code = RLC_OK;
 
-//    RLC_TRY {
+    RLC_TRY {
         arch_init();
 //        rand_init();
 //
@@ -128,56 +128,56 @@ int core_init(void) {
 //        bench_init();
 //#endif
 //
-//#ifdef WITH_FP
-//        fp_prime_init();
-//#endif
+#ifdef WITH_FP
+        fp_prime_init();
+#endif
 //#ifdef WITH_FB
 //        fb_poly_init();
 //#endif
-//#ifdef WITH_EP
-//        ep_curve_init();
-//#endif
+#ifdef WITH_EP
+        ep_curve_init();
+#endif
 //#ifdef WITH_EB
 //        eb_curve_init();
 //#endif
 //#ifdef WITH_ED
 //        ed_curve_init();
 //#endif
-//#ifdef WITH_PP
-//        pp_map_init();
-//#endif
+#ifdef WITH_PP
+        pp_map_init();
+#endif
 //#ifdef WITH_PC
 //        pc_core_init();
 //#endif
-//    } RLC_CATCH_ANY {
-//        return RLC_ERR;
-//    }
+    } RLC_CATCH_ANY {
+        return RLC_ERR;
+    }
 //
     return RLC_OK;
 }
 
 int core_clean(void) {
-//#ifdef WITH_FP
-//    fp_prime_clean();
-//#endif
+#ifdef WITH_FP
+    fp_prime_clean();
+#endif
 //#ifdef WITH_FB
 //    fb_poly_clean();
 //#endif
-//#ifdef WITH_EP
-//    ep_curve_clean();
-//#endif
+#ifdef WITH_EP
+    ep_curve_clean();
+#endif
 //#ifdef WITH_EB
 //    eb_curve_clean();
 //#endif
 //#ifdef WITH_ED
 //    ed_curve_clean();
 //#endif
-//#ifdef WITH_PP
-//    pp_map_clean();
-//#endif
-//#ifdef WITH_PC
-//    pc_core_clean();
-//#endif
+#ifdef WITH_PP
+    pp_map_clean();
+#endif
+#ifdef WITH_PC
+    pc_core_clean();
+#endif
 //
 //#if BENCH > 0
 //    bench_clean();

@@ -13,7 +13,7 @@ macro(ADD_MODULE MODULE)
     add_test(test_${MODULE} ${SIMUL} ${SIMAR} ${EXECUTABLE_OUTPUT_PATH}/test_${MODULE})
 endmacro(ADD_MODULE)
 
-ADD_MODULE(tmp)
+ADD_MODULE(sm9_pairing)
 
 #if (CHECK)
 #    ADD_MODULE(err)

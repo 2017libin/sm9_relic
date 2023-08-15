@@ -14,7 +14,7 @@ macro(ADD_MODULE MODULE)
 endmacro(ADD_MODULE)
 
 ADD_MODULE(sm9_pairing)
-
+ADD_MODULE(sm2_sign)
 #if (CHECK)
 #    ADD_MODULE(err)
 #endif(CHECK)

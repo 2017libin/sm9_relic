@@ -8,6 +8,12 @@ size_t count_t;
 double time_used;
 size_t second_t;
 
+// 来自GmSSL，用于输出错误信息
+#define DEBUG 1
+
+#define error_print() \
+	do { if (DEBUG) fprintf(stderr, "%s:%d:%s():\n",__FILE__, __LINE__, __func__); } while (0)
+
 #if 1
 // 测试性能
 #define PERFORMANCE_TEST(prestr, func, times) begin_t = clock();   \

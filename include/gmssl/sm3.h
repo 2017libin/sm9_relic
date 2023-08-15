@@ -61,7 +61,7 @@ void sm3_digest(const uint8_t *data, size_t datalen, uint8_t dgst[SM3_DIGEST_SIZ
 
 typedef struct {
 	SM3_CTX sm3_ctx;
-	unsigned char key[SM3_BLOCK_SIZE];
+    unsigned char key[SM3_BLOCK_SIZE];
 } SM3_HMAC_CTX;
 
 void sm3_hmac_init(SM3_HMAC_CTX *ctx, const uint8_t *key, size_t keylen);

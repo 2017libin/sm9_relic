@@ -56,7 +56,9 @@ void test_sm9_pairing(){
     fp12_free(r);
 }
 
+//
 int main(int argc, char *argv[]) {
+    //
     if (core_init() != RLC_OK) {
         core_clean();
         return 1;
@@ -68,6 +70,7 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+    // 设置曲线参数
     test_sm9_pairing();
 
     core_clean();

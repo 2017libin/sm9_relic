@@ -105,6 +105,7 @@ int core_init(void) {
     }
 
 #ifdef CHECK
+    // 错误信息
     core_ctx->reason[ERR_NO_MEMORY] = MSG_NO_MEMORY;
 	core_ctx->reason[ERR_NO_PRECI] = MSG_NO_PRECI;
 	core_ctx->reason[ERR_NO_FILE] = MSG_NO_FILE;
@@ -118,6 +119,7 @@ int core_init(void) {
 	core_ctx->last = NULL;
 #endif /* CHECK */
 
+    // 返回状态码
     core_ctx->code = RLC_OK;
 
     RLC_TRY {
@@ -195,6 +197,7 @@ int core_clean(void) {
     return RLC_OK;
 }
 
+// 获取core的指针
 ctx_t *core_get(void) {
 #if defined(MULTI)
     if (core_ctx == NULL && core_thread_initializer != NULL) {

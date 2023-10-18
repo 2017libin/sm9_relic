@@ -72,14 +72,14 @@ option(FP_QNRES "Use -1 as quadratic non-residue." off)
 
 # Choose the arithmetic methods.
 if (NOT FP_METHD)
-    set(FP_METHD "INTEG;INTEG;INTEG;MONTY;MONTY;JMPDS;SLIDE")
+    set(FP_METHD "INTEG;INTEG;INTEG;MONTY;MONTY;JMPDS;SLIDE")  # FP_METHD表示一个数组
 endif(NOT FP_METHD)
 list(LENGTH FP_METHD FP_LEN)
 if (FP_LEN LESS 7)
     message(FATAL_ERROR "Incomplete FP_METHD specification: ${FP_METHD}")
 endif(FP_LEN LESS 7)
 
-list(GET FP_METHD 0 FP_ADD)
+list(GET FP_METHD 0 FP_ADD)  # 将FP_METHD的第一个元素赋值给FP_ADD变量，即 FP_ADD=INTEG
 list(GET FP_METHD 1 FP_MUL)
 list(GET FP_METHD 2 FP_SQR)
 list(GET FP_METHD 3 FP_RDC)

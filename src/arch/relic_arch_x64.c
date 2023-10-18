@@ -45,11 +45,11 @@
 /*============================================================================*/
 /* Public definitions                                                         */
 /*============================================================================*/
-
 void arch_init(void) {
     ctx_t *ctx = core_get();
     if (ctx != NULL) {
         core_get()->lzcnt_ptr =
+                // 判断是否支持LZCNT指令，支持的话使用LZCNT实现lzcnt，否则使用其他方法
                 (has_lzcnt_hard() ? lzcnt64_hard : lzcnt64_soft);
     }
 }

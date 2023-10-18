@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "relic_bn_low.h": "c",
+        "relic_core.h": "c"
+    }
+}

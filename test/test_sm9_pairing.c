@@ -65,9 +65,8 @@ int main(int argc, char *argv[]) {
     }
 
     if (pc_param_set_any() != RLC_OK) {
-        RLC_THROW(ERR_NO_CURVE);
         core_clean();
-        return 0;
+        return 1;
     }
 
     // 设置曲线参数

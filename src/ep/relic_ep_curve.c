@@ -181,6 +181,7 @@ static void ep_curve_set(const fp_t a, const fp_t b, const ep_t g, const bn_t r,
     fp_dbl(ctx->ep_b3, b);
     fp_add(ctx->ep_b3, ctx->ep_b3, b);
 
+    //
     detect_opt(&(ctx->ep_opt_a), ctx->ep_a);
     detect_opt(&(ctx->ep_opt_b), ctx->ep_b);
     detect_opt(&(ctx->ep_opt_b3), ctx->ep_b3);
@@ -193,7 +194,7 @@ static void ep_curve_set(const fp_t a, const fp_t b, const ep_t g, const bn_t r,
     bn_copy(&(ctx->ep_h), h);
 
 #if defined(EP_PRECO)
-    ep_mul_pre((ep_t *)ep_curve_get_tab(), &(ctx->ep_g));
+    ep_mul_pre((ep_t *)ep_curve_get_tab(), &(ctx->ep_g));  // 生成元的预计算
 #endif
 }
 
@@ -368,7 +369,7 @@ const ep_t *ep_curve_get_tab(void) {
 
     /* Return a meaningful pointer. */
 #if ALLOC == AUTO
-    return (const ep_t *)*core_get()->ep_ptr;
+    return (const ep_t *)*core_get()->ep_ptr;  // 预计算
 #else
     return (const ep_t *)core_get()->ep_ptr;
 #endif
@@ -423,6 +424,7 @@ void ep_curve_set_endom(const fp_t a, const fp_t b, const ep_t g, const bn_t r,
     ctx->ep_is_endom = 1;
     ctx->ep_is_super = 0;
 
+    //
     ep_curve_set(a, b, g, r, h, u, ctmap);
 
     /* Precompute endomorphism constants. */

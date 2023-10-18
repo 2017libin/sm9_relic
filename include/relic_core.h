@@ -440,7 +440,7 @@ typedef struct _ctx_t {
 //	struct perf_event_mmap_page *perf_buf;
 //#endif
 //
-//    /** Function pointer to underlying lznct implementation. */
+    /** Function pointer to underlying lznct implementation. */
 #if ARCH == X86
     unsigned int (*lzcnt_ptr)(unsigned int);
 #elif ARCH == X64

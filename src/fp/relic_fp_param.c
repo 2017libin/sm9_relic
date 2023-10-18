@@ -96,6 +96,7 @@ void fp_param_set(int param) {
 		bn_new(t2);
 		bn_new(p);
 
+        // 设置fp_id
 		core_get()->fp_id = param;
 
 		switch (param) {

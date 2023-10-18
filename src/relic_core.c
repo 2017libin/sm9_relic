@@ -100,6 +100,7 @@ static ctx_t *core_ctx = NULL;
 #endif
 
 int core_init(void) {
+    // 共用一个全局first_ctx，cort_ctx是first_ctx的指针
     if (core_ctx == NULL) {
         core_ctx = &(first_ctx);
     }

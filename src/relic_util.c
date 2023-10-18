@@ -198,6 +198,7 @@ void util_print(const char *format, ...) {
 }
 #endif
 
+// pad表示以固定宽度进行输出
 void util_print_dig(dig_t a, int pad) {
 #if RLC_DIG == 64
     if (pad) {

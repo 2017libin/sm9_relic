@@ -697,6 +697,7 @@
  * @param[in] CURVE		- the curve parameters to assign.
  * @param[in] FIELD		- the finite field identifier.
  */
+// ##表示连接符，CURVE##_A 表示字符串 "CURVE_A"
 #define ASSIGN(CURVE, FIELD)												\
 	fp_param_set(FIELD);													\
 	RLC_GET(str, CURVE##_A, sizeof(CURVE##_A));								\
@@ -1196,8 +1197,8 @@ void ep_param_set(int param) {
 #if defined(EP_ENDOM)
                         if (endom) {
                             ep_curve_set_endom(a, b, g, r, h, beta, lamb, u, ctmap);
-                            core_get()->ep_id = param;
-                            core_get()->ep_is_pairf = pairf;
+                            core_get()->ep_id = param;  // SM9_256
+                            core_get()->ep_is_pairf = pairf;  // EP_BN，标志曲线是否为配对友好型
                         }
 #endif
 
@@ -1469,6 +1470,17 @@ int ep_param_set_any_pairf(void) {
 	(void)degree;
 #endif
     return r;
+}
+
+int ep_param_set_any_pairf_t(int EP_TYPE, int PP_TYPE) {
+#if defined(EP_ENDOM)
+    ep_param_set(EP_TYPE);  // EP_TYPE = SM9_P256
+#endif
+
+#ifdef WITH_PP
+    ep2_curve_set_twist(PP_TYPE);
+#endif
+    return RLC_OK;
 }
 
 void ep_param_print(void) {

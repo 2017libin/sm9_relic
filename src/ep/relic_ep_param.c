@@ -964,167 +964,169 @@ void ep_param_set(int param) {
                                 pairf = EP_BN;
                                 break;
 #endif
-//#if defined(EP_ENDOM) & FP_PRIME == 315
-//                                case B24_P315:
-//				ASSIGN(B24_P315, B24_315);
-//				endom = 1;
-//				pairf = EP_B24;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) & FP_PRIME == 317
-//                                case B24_P317:
-//				ASSIGN(B24_P317, B24_317);
-//				endom = 1;
-//				pairf = EP_B24;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) & FP_PRIME == 377
-//                                case B12_P377:
-//				ASSIGN(B12_P377, B12_377);
-//				endom = 1;
-//				pairf = EP_B12;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) & FP_PRIME == 381
-//                                case B12_P381:
-//				ASSIGN(B12_P381, B12_381);
-//				endom = 1;
-//#if defined(EP_CTMAP)
-//				ASSIGNM(B12_P381);
-//				ctmap = 1;
-//#endif /* EP_CTMAP */
-//				pairf = EP_B12;
-//				break;
-//#endif
-//#if defined(EP_PLAIN) & FP_PRIME == 382
-//                                case CURVE_67254:
-//				ASSIGN(CURVE_67254, PRIME_382105);
-//				plain = 1;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) & FP_PRIME == 382
-//                                case BN_P382:
-//				ASSIGN(BN_P382, BN_382);
-//				endom = 1;
-//				pairf = EP_BN;
-//				break;
-//#endif
-//#if defined(EP_PLAIN) && FP_PRIME == 383
-//                                case CURVE_383187:
-//				ASSIGN(CURVE_383187, PRIME_383187);
-//				plain = 1;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 383
-//                                case B12_P383:
-//				ASSIGN(B12_P383, B12_383);
-//				endom = 1;
-//				pairf = EP_B12;
-//				break;
-//#endif
-//#if defined(EP_PLAIN) && FP_PRIME == 384
-//                                case NIST_P384:
-//				ASSIGN(NIST_P384, NIST_384);
-//				plain = 1;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 446
-//                                case BN_P446:
-//				ASSIGN(BN_P446, BN_446);
-//				endom = 1;
-//				pairf = EP_BN;
-//				break;
-//			case B12_P446:
-//				ASSIGN(B12_P446, B12_446);
-//				endom = 1;
-//				pairf = EP_B12;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 455
-//                                case B12_P455:
-//				ASSIGN(B12_P455, B12_455);
-//				endom = 1;
-//				pairf = EP_B12;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 508
-//                                case KSS_P508:
-//				ASSIGNK(KSS_P508, KSS_508);
-//				endom = 1;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 509
-//                                case B24_P509:
-//				ASSIGN(B24_P509, B24_509);
-//				endom = 1;
-//				pairf = EP_B24;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 511
-//                                case OT8_P511:
-//				ASSIGNK(OT8_P511, OT_511);
-//				endom = 1;
-//				break;
-//#endif
-//#if defined(EP_PLAIN) && FP_PRIME == 511
-//                                case CURVE_511187:
-//				ASSIGN(CURVE_511187, PRIME_511187);
-//				plain = 1;
-//				break;
-//#endif
-//#if defined(EP_PLAIN) && FP_PRIME == 521
-//                                case NIST_P521:
-//				ASSIGN(NIST_P521, NIST_521);
-//				plain = 1;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 544
-//                                case GMT8_P544:
-//				ASSIGNK(GMT8_P544, GMT8_544);
-//				endom = 1;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 569
-//                                case K54_P569:
-//				ASSIGNK(K54_P569, K54_569);
-//				endom = 1;
-//				pairf = EP_K54;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 575
-//                                case B48_P575:
-//				ASSIGNK(B48_P575, B48_575);
-//				endom = 1;
-//				pairf = EP_B48;
-//				break;
-//#endif
-//#if defined(EP_ENDOM) && FP_PRIME == 638
-//                                case BN_P638:
-//				ASSIGN(BN_P638, BN_638);
-//				endom = 1;
-//				pairf = EP_BN;
-//				break;
-//			case B12_P638:
-//				ASSIGN(B12_P638, B12_638);
-//				endom = 1;
-//				pairf = EP_B12;
-//				break;
-//#endif
-//#if defined(EP_SUPER) && FP_PRIME == 1536
-//                                case SS_P1536:
-//				ASSIGN(SS_P1536, SS_1536);
-//				super = 1;
-//				break;
-//#endif
+#if defined(EP_ENDOM) & FP_PRIME == 315
+                                case B24_P315:
+				ASSIGN(B24_P315, B24_315);
+				endom = 1;
+				pairf = EP_B24;
+				break;
+#endif
+#if defined(EP_ENDOM) & FP_PRIME == 317
+                                case B24_P317:
+				ASSIGN(B24_P317, B24_317);
+				endom = 1;
+				pairf = EP_B24;
+				break;
+#endif
+#if defined(EP_ENDOM) & FP_PRIME == 377
+                                case B12_P377:
+				ASSIGN(B12_P377, B12_377);
+				endom = 1;
+				pairf = EP_B12;
+				break;
+#endif
+#if defined(EP_ENDOM) & FP_PRIME == 381
+                                case B12_P381:
+				ASSIGN(B12_P381, B12_381);
+				endom = 1;
+#if defined(EP_CTMAP)
+				ASSIGNM(B12_P381);
+				ctmap = 1;
+#endif /* EP_CTMAP */
+				pairf = EP_B12;
+				break;
+#endif
+#if defined(EP_PLAIN) & FP_PRIME == 382
+                                case CURVE_67254:
+				ASSIGN(CURVE_67254, PRIME_382105);
+				plain = 1;
+				break;
+#endif
+#if defined(EP_ENDOM) & FP_PRIME == 382
+                                case BN_P382:
+				ASSIGN(BN_P382, BN_382);
+				endom = 1;
+				pairf = EP_BN;
+				break;
+#endif
+#if defined(EP_PLAIN) && FP_PRIME == 383
+                                case CURVE_383187:
+				ASSIGN(CURVE_383187, PRIME_383187);
+				plain = 1;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 383
+                                case B12_P383:
+				ASSIGN(B12_P383, B12_383);
+				endom = 1;
+				pairf = EP_B12;
+				break;
+#endif
+#if defined(EP_PLAIN) && FP_PRIME == 384
+                                case NIST_P384:
+				ASSIGN(NIST_P384, NIST_384);
+				plain = 1;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 446
+                                case BN_P446:
+				ASSIGN(BN_P446, BN_446);
+				endom = 1;
+				pairf = EP_BN;
+				break;
+			case B12_P446:
+				ASSIGN(B12_P446, B12_446);
+				endom = 1;
+				pairf = EP_B12;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 455
+                                case B12_P455:
+				ASSIGN(B12_P455, B12_455);
+				endom = 1;
+				pairf = EP_B12;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 508
+                                case KSS_P508:
+				ASSIGNK(KSS_P508, KSS_508);
+				endom = 1;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 509
+                                case B24_P509:
+				ASSIGN(B24_P509, B24_509);
+				endom = 1;
+				pairf = EP_B24;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 511
+                                case OT8_P511:
+				ASSIGNK(OT8_P511, OT_511);
+				endom = 1;
+				break;
+#endif
+#if defined(EP_PLAIN) && FP_PRIME == 511
+                                case CURVE_511187:
+				ASSIGN(CURVE_511187, PRIME_511187);
+				plain = 1;
+				break;
+#endif
+#if defined(EP_PLAIN) && FP_PRIME == 521
+                                case NIST_P521:
+				ASSIGN(NIST_P521, NIST_521);
+				plain = 1;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 544
+                                case GMT8_P544:
+				ASSIGNK(GMT8_P544, GMT8_544);
+				endom = 1;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 569
+                                case K54_P569:
+				ASSIGNK(K54_P569, K54_569);
+				endom = 1;
+				pairf = EP_K54;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 575
+                                case B48_P575:
+				ASSIGNK(B48_P575, B48_575);
+				endom = 1;
+				pairf = EP_B48;
+				break;
+#endif
+#if defined(EP_ENDOM) && FP_PRIME == 638
+                                case BN_P638:
+				ASSIGN(BN_P638, BN_638);
+				endom = 1;
+				pairf = EP_BN;
+				break;
+			case B12_P638:
+				ASSIGN(B12_P638, B12_638);
+				endom = 1;
+				pairf = EP_B12;
+				break;
+#endif
+#if defined(EP_SUPER) && FP_PRIME == 1536
+                                case SS_P1536:
+				ASSIGN(SS_P1536, SS_1536);
+				super = 1;
+				break;
+#endif
                             default:
                                 (void)str;
                                 RLC_THROW(ERR_NO_VALID);
                                 break;
                         }
 
+// 计算beta和lambda，作用是什么？
 #if defined(EP_ENDOM)
                         if (endom) {
                             switch(pairf) {
+
                                 /* beta = (-1+sqrt(-3))/2, lambda = 36*u^3 + 18*u^2 + 6*u + 1 */
                                 case EP_BN:
                                     fp_set_dig(beta, 3);
@@ -1142,29 +1144,29 @@ void ep_param_set(int param) {
                                         bn_sub_dig(lamb, lamb, 1);
                                     }
                                     break;
-//                                    /* beta = (-1 + sqrt(-3))/2, lambda = z^2 - 1 */
-//                                case EP_B12:
-//                                    fp_set_dig(beta, 3);
-//                                    fp_neg(beta, beta);
-//                                    fp_srt(beta, beta);
-//                                    fp_sub_dig(beta, beta, 1);
-//                                    fp_hlv(beta, beta);
-//                                    fp_prime_get_par(lamb);
-//                                    bn_sqr(lamb, lamb);
-//                                    bn_sub_dig(lamb, lamb, 1);
-//                                    break;
-//                                case EP_B24:
-//                                    /* beta = (-1 + sqrt(-3))/2, lambda = z^4 - 1. */
-//                                    fp_set_dig(beta, 3);
-//                                    fp_neg(beta, beta);
-//                                    fp_srt(beta, beta);
-//                                    fp_sub_dig(beta, beta, 1);
-//                                    fp_hlv(beta, beta);
-//                                    fp_prime_get_par(lamb);
-//                                    bn_sqr(lamb, lamb);
-//                                    bn_sqr(lamb, lamb);
-//                                    bn_sub_dig(lamb, lamb, 1);
-//                                    break;
+                                    /* beta = (-1 + sqrt(-3))/2, lambda = z^2 - 1 */
+                                case EP_B12:
+                                    fp_set_dig(beta, 3);
+                                    fp_neg(beta, beta);
+                                    fp_srt(beta, beta);
+                                    fp_sub_dig(beta, beta, 1);
+                                    fp_hlv(beta, beta);
+                                    fp_prime_get_par(lamb);
+                                    bn_sqr(lamb, lamb);
+                                    bn_sub_dig(lamb, lamb, 1);
+                                    break;
+                                case EP_B24:
+                                    /* beta = (-1 + sqrt(-3))/2, lambda = z^4 - 1. */
+                                    fp_set_dig(beta, 3);
+                                    fp_neg(beta, beta);
+                                    fp_srt(beta, beta);
+                                    fp_sub_dig(beta, beta, 1);
+                                    fp_hlv(beta, beta);
+                                    fp_prime_get_par(lamb);
+                                    bn_sqr(lamb, lamb);
+                                    bn_sqr(lamb, lamb);
+                                    bn_sub_dig(lamb, lamb, 1);
+                                    break;
                                 default:
                                     if (bn_cmp_dig(h, 1) == RLC_EQ) {
                                         /* SECG curves with endomorphisms. */

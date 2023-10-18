@@ -75,6 +75,7 @@ enum {
     CURVE_25519,
     /** Curve Tweedledum given by Daira Hopwoord at https://github.com/daira/tweedle */
     TWEEDLEDUM,
+    SM2_P256,
     /** NIST P-256 prime curve. */
     NIST_P256,
     /** Brainpool P256r1 curve. */

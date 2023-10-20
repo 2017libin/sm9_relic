@@ -168,7 +168,7 @@ static void ep_curve_set_map(const fp_t u) {
  * @param[in] b			- the 'b' coefficient of the curve.
  * @param[in] g			- the generator.
  * @param[in] r			- the order of the group of points.
- * @param[in] h			- the cofactor of the group order.
+ * @param[in] h			- the cofactor of the group order.（余因子）
  * @param[in] u			- the non-square used for hashing to this curve.
  * @param[in] ctmap	- true if this curve will use an isogeny for mapping.
  */
@@ -181,7 +181,7 @@ static void ep_curve_set(const fp_t a, const fp_t b, const ep_t g, const bn_t r,
     fp_dbl(ctx->ep_b3, b);
     fp_add(ctx->ep_b3, ctx->ep_b3, b);
 
-    //
+    // 检测a/b/b3是否为优化系数（小系数？）
     detect_opt(&(ctx->ep_opt_a), ctx->ep_a);
     detect_opt(&(ctx->ep_opt_b), ctx->ep_b);
     detect_opt(&(ctx->ep_opt_b3), ctx->ep_b3);

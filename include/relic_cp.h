@@ -1108,6 +1108,50 @@ int cp_ecdsa_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t q);
  * @param[in] q				- the public key.
  * @return RLC_OK if no errors occurred, RLC_ERR otherwise.
  */
+
+/**
+ * Generates an SM2 key pair.
+ *
+ * @param[out] d			- the private key.
+ * @param[in] q				- the public key.
+ * @return RLC_OK if no errors occurred, RLC_ERR otherwise.
+ */
+int cp_sm2_gen(bn_t d, ec_t q);
+
+/**
+ * Signs a message using SM2.
+ *
+ * @param[out] r			- the first component of the signature.
+ * @param[out] s			- the second component of the signature.
+ * @param[in] msg			- the message to sign.
+ * @param[in] len			- the message length in bytes.
+ * @param[in] hash			- the flag to indicate the message format.
+ * @param[in] d				- the private key.
+ * @return RLC_OK if no errors occurred, RLC_ERR otherwise.
+ */
+int cp_sm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash, bn_t d);
+
+/**
+ * Verifies a message signed with SM2 using the basic method.
+ *
+ * @param[out] r			- the first component of the signature.
+ * @param[out] s			- the second component of the signature.
+ * @param[in] msg			- the message to sign.
+ * @param[in] len			- the message length in bytes.
+ * @param[in] hash			- the flag to indicate the message format.
+ * @param[in] q				- the public key.
+ * @return a boolean value indicating if the signature is valid.
+ */
+int cp_sm2_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t q);
+
+/**
+ * Generates an Elliptic Curve Schnorr Signature key pair.
+ *
+ * @param[out] d			- the private key.
+ * @param[in] q				- the public key.
+ * @return RLC_OK if no errors occurred, RLC_ERR otherwise.
+ */
+
 int cp_ecss_gen(bn_t d, ec_t q);
 
 /**

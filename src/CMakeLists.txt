@@ -132,6 +132,8 @@ if (WITH_CP)
 #        list(APPEND RELIC_SRCS "cp/relic_cp_ecmqv.c")
 #        list(APPEND RELIC_SRCS "cp/relic_cp_ecies.c")
         list(APPEND RELIC_SRCS "cp/relic_cp_ecdsa.c")
+        list(APPEND RELIC_SRCS "cp/relic_cp_sm2.c")
+
 #        list(APPEND RELIC_SRCS "cp/relic_cp_ecss.c")
 #        list(APPEND RELIC_SRCS "cp/relic_cp_vbnn.c")
 #        list(APPEND RELIC_SRCS "cp/relic_cp_pok.c")

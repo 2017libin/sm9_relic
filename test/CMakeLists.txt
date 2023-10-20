@@ -15,6 +15,7 @@ endmacro(ADD_MODULE)
 
 ADD_MODULE(sm9_pairing)
 ADD_MODULE(sm2_sign)
+ADD_MODULE(sm2_sign_2)
 ADD_MODULE(ecdsa_sign)
 ADD_MODULE(demo)
 #if (CHECK)

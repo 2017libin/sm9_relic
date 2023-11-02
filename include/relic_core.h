@@ -48,7 +48,7 @@
 //#include "relic_ed.h"
 #include "relic_pc.h"
 #include "relic_conf.h"
-//#include "relic_bench.h"
+#include "relic_bench.h"
 #include "relic_rand.h"
 #include "relic_label.h"
 #include "relic_alloc.h"
@@ -407,19 +407,19 @@ typedef struct _ctx_t {
 #if defined(WITH_PC)
     gt_t gt_g;
 #endif
-//
-//#if BENCH > 0
-//    /** Stores the time measured before the execution of the benchmark. */
-//    ben_t before;
-//    /** Stores the time measured after the execution of the benchmark. */
-//    ben_t after;
-//    /** Stores the sum of timings for the current benchmark. */
-//    ull_t total;
-//#ifdef OVERH
-//    /** Benchmarking overhead to be measured and subtracted from benchmarks. */
-//	ull_t over;
-//#endif
-//#endif
+
+#if BENCH > 0
+    /** Stores the time measured before the execution of the benchmark. */
+    ben_t before;
+    /** Stores the time measured after the execution of the benchmark. */
+    ben_t after;
+    /** Stores the sum of timings for the current benchmark. */
+    ull_t total;
+#ifdef OVERH
+    /** Benchmarking overhead to be measured and subtracted from benchmarks. */
+	ull_t over;
+#endif
+#endif
 
 #if RAND != CALL
     /** Internal state of the PRNG. */

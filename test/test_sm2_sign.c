@@ -145,9 +145,7 @@ int sm2_compute_z(uint8_t z[32], const ep_t pub, const char *id, size_t idlen)
         return -1;
     }
 
-
     ep_write_bin(&zin[18 + 32 * 4], 64, pub, 0);
-
 
 //    memcpy(&zin[18 + 32 * 4], pub->x, 32);
 //    memcpy(&zin[18 + 32 * 5], pub->y, 32);

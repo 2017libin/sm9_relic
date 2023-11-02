@@ -34,7 +34,7 @@
 #include <string.h>
 
 #include "relic_core.h"
-//#include "relic_bench.h"
+#include "relic_bench.h"
 //#include "relic_multi.h"
 #include "relic_rand.h"
 #include "relic_types.h"
@@ -127,9 +127,9 @@ int core_init(void) {
         arch_init();
         rand_init();
 
-//#if BENCH > 0
-//        bench_init();
-//#endif
+#if BENCH > 0
+        bench_init();
+#endif
 
 #ifdef WITH_FP
         fp_prime_init();
@@ -182,10 +182,10 @@ int core_clean(void) {
 #ifdef WITH_PC
     pc_core_clean();
 #endif
-//
-//#if BENCH > 0
-//    bench_clean();
-//#endif
+
+#if BENCH > 0
+    bench_clean();
+#endif
 
     arch_clean();
     rand_clean();

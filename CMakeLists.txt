@@ -46,7 +46,7 @@ option(PROFL "Build with profiling support" off)
 option(CHECK "Build with error-checking support" on)
 option(VERBS "Build with detailed error messages" on)
 option(OVERH "Build with overhead estimation" off)
-option(DOCUM "Build documentation" on)
+option(DOCUM "Build documentation" off)
 option(STRIP "Build only the selected algorithms" off)
 option(QUIET "Build with printing disabled" off)
 option(COLOR "Build with colored output" on)
@@ -150,7 +150,8 @@ include(cmake/with.cmake)
 
 # Number of tests and benchmarks
 set(BENCH "100" CACHE STRING "Number of times each benchmark is ran.")
-set(TESTS "100" CACHE STRING "Number of times each test is ran.")
+set(TESTS "0" CACHE STRING "Number of times each test is ran.")
+
 
 # Number of cores.
 set(CORES "1" CACHE STRING "Number of processor cores available to the library.")
@@ -358,13 +359,14 @@ install(FILES cmake/relic-config.cmake DESTINATION cmake/)
 #endif()
 
 if(TESTS GREATER 0)
+    message(${TESTS})
     enable_testing()
     add_subdirectory(test)
 endif(TESTS GREATER 0)
 
-#if(BENCH GREATER 0)
-#    add_subdirectory(bench)
-#endif(BENCH GREATER 0)
+if(BENCH GREATER 0)
+    add_subdirectory(bench)
+endif(BENCH GREATER 0)
 
 #add_subdirectory(sample)
 # set (CMAKE_C_FLAGS " -O3 ${CMAKE_C_FLAGS}")

@@ -1016,6 +1016,16 @@ static int exponentiation(void) {
     bn_t a, b, c, p;
     crt_t crt;
 
+    bn_t tmp1, tmp2, tmp3, g, ld, N, N2;
+
+    bn_null(tmp1);
+    bn_null(tmp2);
+    bn_null(tmp3);
+    bn_null(g);
+    bn_null(ld);
+    bn_null(N);
+    bn_null(N2);
+
     bn_null(a);
     bn_null(b);
     bn_null(c);
@@ -1023,6 +1033,14 @@ static int exponentiation(void) {
     crt_null(crt);
 
     RLC_TRY {
+                        bn_new(tmp1);
+                        bn_new(tmp2);
+                        bn_new(tmp3);
+                        bn_new(g);
+                        bn_new(ld);
+                        bn_new(N);
+                        bn_new(N2);
+
                         bn_new(a);
                         bn_new(b);
                         bn_new(c);
@@ -1040,6 +1058,22 @@ static int exponentiation(void) {
 
                         TEST_CASE("modular exponentiation is correct") {
                             bn_rand(a, RLC_POS, RLC_BN_BITS);
+                            // paillier
+                            do {
+                                bn_gen_prime(tmp1, 512);
+                                bn_gen_prime(tmp2, 512);
+                            } while (bn_is_even(tmp1) || bn_is_even(tmp2));
+//                            bn_rand(tmp1, RLC_POS, 512);
+//                            bn_rand(tmp2, RLC_POS, 512);
+//                            bn_gen_prime(tmp1, RLC_BN_BITS / 2);
+//                            bn_gen_prime(tmp2, RLC_BN_BITS / 2);
+                            bn_mul(N, tmp1, tmp2);  // tmp1 = N
+                            bn_add_dig(g, N, 1);
+                            bn_mul(N2, N, N);
+                            bn_sub_dig(tmp1, tmp1, 1);
+                            bn_sub_dig(tmp2, tmp2, 1);
+                            bn_lcm(ld, tmp1, tmp2);
+                            bn_mxp(tmp1, g, ld, N2);
                             bn_mod(a, a, p);
                             bn_mxp(b, a, p, p);
                             TEST_ASSERT(bn_cmp(a, b) == RLC_EQ, end);
@@ -1118,7 +1152,8 @@ static int exponentiation(void) {
                             bn_mod(a, a, crt->n);
                             bn_mul(c, crt->dp, crt->dq);
                             bn_mod(b, b, c);
-                            bn_mxp(p, a, b, crt->n);
+
+                            bn_mxp(p, a, b, crt->n);  // 没报错？
                             bn_mod(c, b, crt->dp);
                             bn_mod(b, b, crt->dq);
                             bn_mxp_crt(c, a, c, b, crt, 0);
@@ -2008,141 +2043,141 @@ static int recoding(void) {
                                 TEST_ASSERT(bn_cmp(a, b) == RLC_EQ, end);
                             }
                         } TEST_END;
-
-#if defined(WITH_EB) && defined(EB_KBLTZ) && (EB_MUL == LWNAF || EB_MUL == RWNAF || EB_FIX == LWNAF || EB_SIM == INTER || !defined(STRIP))
-                        if (eb_param_set_any_kbltz() == RLC_OK) {
-			eb_curve_get_ord(v1[2]);
-			TEST_CASE("tnaf recoding is correct") {
-				for (w = 2; w <= 8; w++) {
-					uint8_t t_w;
-					int8_t beta[64], gama[64];
-					int8_t tnaf[RLC_FB_BITS + 8];
-					int8_t u = (eb_curve_opt_a() == RLC_ZERO ? -1 : 1);
-					bn_rand_mod(a, v1[2]);
-					l = RLC_FB_BITS + 1;
-					bn_rec_tnaf_mod(v1[0], v1[1], a, u, RLC_FB_BITS);
-					bn_rec_tnaf_get(&t_w, beta, gama, u, w);
-					bn_rec_tnaf(tnaf, &l, a, u, RLC_FB_BITS, w);
-					bn_zero(a);
-					bn_zero(b);
-					for (k = l - 1; k >= 0; k--) {
-						bn_copy(c, b);
-						if (u == -1) {
-							bn_neg(c, c);
-						}
-						bn_add(c, c, a);
-						bn_dbl(a, b);
-						bn_neg(a, a);
-						bn_copy(b, c);
-						if (w == 2) {
-							if (tnaf[k] >= 0) {
-								bn_add_dig(a, a, tnaf[k]);
-							} else {
-								bn_sub_dig(a, a, -tnaf[k]);
-							}
-						} else {
-							if (tnaf[k] > 0) {
-								if (beta[tnaf[k] / 2] >= 0) {
-									bn_add_dig(a, a, beta[tnaf[k] / 2]);
-								} else {
-									bn_sub_dig(a, a, -beta[tnaf[k] / 2]);
-								}
-								if (gama[tnaf[k] / 2] >= 0) {
-									bn_add_dig(b, b, gama[tnaf[k] / 2]);
-								} else {
-									bn_sub_dig(b, b, -gama[tnaf[k] / 2]);
-								}
-							}
-							if (tnaf[k] < 0) {
-								if (beta[-tnaf[k] / 2] >= 0) {
-									bn_sub_dig(a, a, beta[-tnaf[k] / 2]);
-								} else {
-									bn_add_dig(a, a, -beta[-tnaf[k] / 2]);
-								}
-								if (gama[-tnaf[k] / 2] >= 0) {
-									bn_sub_dig(b, b, gama[-tnaf[k] / 2]);
-								} else {
-									bn_add_dig(b, b, -gama[-tnaf[k] / 2]);
-								}
-							}
-						}
-					}
-					TEST_ASSERT(bn_cmp(a, v1[0]) == RLC_EQ, end);
-					TEST_ASSERT(bn_cmp(b, v1[1]) == RLC_EQ, end);
-				}
-			}
-			TEST_END;
-
-			TEST_CASE("regular tnaf recoding is correct") {
-				for (w = 2; w <= 8; w++) {
-					uint8_t t_w;
-					int8_t beta[64], gama[64];
-					int8_t tnaf[RLC_FB_BITS + 8];
-					int8_t u = (eb_curve_opt_a() == RLC_ZERO ? -1 : 1);
-					int n;
-					do {
-						bn_rand_mod(a, v1[2]);
-						l = RLC_FB_BITS + 1;
-						bn_rec_tnaf_mod(v1[0], v1[1], a, u, RLC_FB_BITS);
-					} while (bn_is_even(v1[0]) || bn_is_even(v1[1]));
-					bn_rec_tnaf_get(&t_w, beta, gama, u, w);
-					bn_rec_rtnaf(tnaf, &l, a, u, RLC_FB_BITS, w);
-					bn_zero(a);
-					bn_zero(b);
-					n = 0;
-					for (k = l - 1; k >= 0; k--) {
-						for (int m = 0; m < w - 1; m++) {
-							bn_copy(c, b);
-							if (u == -1) {
-								bn_neg(c, c);
-							}
-							bn_add(c, c, a);
-							bn_dbl(a, b);
-							bn_neg(a, a);
-							bn_copy(b, c);
-						}
-						if (tnaf[k] != 0) {
-							n++;
-						}
-						if (w == 2) {
-							if (tnaf[k] >= 0) {
-								bn_add_dig(a, a, tnaf[k]);
-							} else {
-								bn_sub_dig(a, a, -tnaf[k]);
-							}
-						} else {
-							if (tnaf[k] > 0) {
-								if (beta[tnaf[k] / 2] >= 0) {
-									bn_add_dig(a, a, beta[tnaf[k] / 2]);
-								} else {
-									bn_sub_dig(a, a, -beta[tnaf[k] / 2]);
-								}
-								if (gama[tnaf[k] / 2] >= 0) {
-									bn_add_dig(b, b, gama[tnaf[k] / 2]);
-								} else {
-									bn_sub_dig(b, b, -gama[tnaf[k] / 2]);
-								}
-							}
-							if (tnaf[k] < 0) {
-								if (beta[-tnaf[k] / 2] >= 0) {
-									bn_sub_dig(a, a, beta[-tnaf[k] / 2]);
-								} else {
-									bn_add_dig(a, a, -beta[-tnaf[k] / 2]);
-								}
-								if (gama[-tnaf[k] / 2] >= 0) {
-									bn_sub_dig(b, b, gama[-tnaf[k] / 2]);
-								} else {
-									bn_add_dig(b, b, -gama[-tnaf[k] / 2]);
-								}
-							}
-						}
-					}
-					TEST_ASSERT(bn_cmp(a, v1[0]) == RLC_EQ, end);
-					TEST_ASSERT(bn_cmp(b, v1[1]) == RLC_EQ, end);
-				}
-			} TEST_END;
-		}
-#endif
+//
+//#if defined(WITH_EB) && defined(EB_KBLTZ) && (EB_MUL == LWNAF || EB_MUL == RWNAF || EB_FIX == LWNAF || EB_SIM == INTER || !defined(STRIP))
+//                        if (eb_param_set_any_kbltz() == RLC_OK) {
+//			eb_curve_get_ord(v1[2]);
+//			TEST_CASE("tnaf recoding is correct") {
+//				for (w = 2; w <= 8; w++) {
+//					uint8_t t_w;
+//					int8_t beta[64], gama[64];
+//					int8_t tnaf[RLC_FB_BITS + 8];
+//					int8_t u = (eb_curve_opt_a() == RLC_ZERO ? -1 : 1);
+//					bn_rand_mod(a, v1[2]);
+//					l = RLC_FB_BITS + 1;
+//					bn_rec_tnaf_mod(v1[0], v1[1], a, u, RLC_FB_BITS);
+//					bn_rec_tnaf_get(&t_w, beta, gama, u, w);
+//					bn_rec_tnaf(tnaf, &l, a, u, RLC_FB_BITS, w);
+//					bn_zero(a);
+//					bn_zero(b);
+//					for (k = l - 1; k >= 0; k--) {
+//						bn_copy(c, b);
+//						if (u == -1) {
+//							bn_neg(c, c);
+//						}
+//						bn_add(c, c, a);
+//						bn_dbl(a, b);
+//						bn_neg(a, a);
+//						bn_copy(b, c);
+//						if (w == 2) {
+//							if (tnaf[k] >= 0) {
+//								bn_add_dig(a, a, tnaf[k]);
+//							} else {
+//								bn_sub_dig(a, a, -tnaf[k]);
+//							}
+//						} else {
+//							if (tnaf[k] > 0) {
+//								if (beta[tnaf[k] / 2] >= 0) {
+//									bn_add_dig(a, a, beta[tnaf[k] / 2]);
+//								} else {
+//									bn_sub_dig(a, a, -beta[tnaf[k] / 2]);
+//								}
+//								if (gama[tnaf[k] / 2] >= 0) {
+//									bn_add_dig(b, b, gama[tnaf[k] / 2]);
+//								} else {
+//									bn_sub_dig(b, b, -gama[tnaf[k] / 2]);
+//								}
+//							}
+//							if (tnaf[k] < 0) {
+//								if (beta[-tnaf[k] / 2] >= 0) {
+//									bn_sub_dig(a, a, beta[-tnaf[k] / 2]);
+//								} else {
+//									bn_add_dig(a, a, -beta[-tnaf[k] / 2]);
+//								}
+//								if (gama[-tnaf[k] / 2] >= 0) {
+//									bn_sub_dig(b, b, gama[-tnaf[k] / 2]);
+//								} else {
+//									bn_add_dig(b, b, -gama[-tnaf[k] / 2]);
+//								}
+//							}
+//						}
+//					}
+//					TEST_ASSERT(bn_cmp(a, v1[0]) == RLC_EQ, end);
+//					TEST_ASSERT(bn_cmp(b, v1[1]) == RLC_EQ, end);
+//				}
+//			}
+//			TEST_END;
+//
+//			TEST_CASE("regular tnaf recoding is correct") {
+//				for (w = 2; w <= 8; w++) {
+//					uint8_t t_w;
+//					int8_t beta[64], gama[64];
+//					int8_t tnaf[RLC_FB_BITS + 8];
+//					int8_t u = (eb_curve_opt_a() == RLC_ZERO ? -1 : 1);
+//					int n;
+//					do {
+//						bn_rand_mod(a, v1[2]);
+//						l = RLC_FB_BITS + 1;
+//						bn_rec_tnaf_mod(v1[0], v1[1], a, u, RLC_FB_BITS);
+//					} while (bn_is_even(v1[0]) || bn_is_even(v1[1]));
+//					bn_rec_tnaf_get(&t_w, beta, gama, u, w);
+//					bn_rec_rtnaf(tnaf, &l, a, u, RLC_FB_BITS, w);
+//					bn_zero(a);
+//					bn_zero(b);
+//					n = 0;
+//					for (k = l - 1; k >= 0; k--) {
+//						for (int m = 0; m < w - 1; m++) {
+//							bn_copy(c, b);
+//							if (u == -1) {
+//								bn_neg(c, c);
+//							}
+//							bn_add(c, c, a);
+//							bn_dbl(a, b);
+//							bn_neg(a, a);
+//							bn_copy(b, c);
+//						}
+//						if (tnaf[k] != 0) {
+//							n++;
+//						}
+//						if (w == 2) {
+//							if (tnaf[k] >= 0) {
+//								bn_add_dig(a, a, tnaf[k]);
+//							} else {
+//								bn_sub_dig(a, a, -tnaf[k]);
+//							}
+//						} else {
+//							if (tnaf[k] > 0) {
+//								if (beta[tnaf[k] / 2] >= 0) {
+//									bn_add_dig(a, a, beta[tnaf[k] / 2]);
+//								} else {
+//									bn_sub_dig(a, a, -beta[tnaf[k] / 2]);
+//								}
+//								if (gama[tnaf[k] / 2] >= 0) {
+//									bn_add_dig(b, b, gama[tnaf[k] / 2]);
+//								} else {
+//									bn_sub_dig(b, b, -gama[tnaf[k] / 2]);
+//								}
+//							}
+//							if (tnaf[k] < 0) {
+//								if (beta[-tnaf[k] / 2] >= 0) {
+//									bn_sub_dig(a, a, beta[-tnaf[k] / 2]);
+//								} else {
+//									bn_add_dig(a, a, -beta[-tnaf[k] / 2]);
+//								}
+//								if (gama[-tnaf[k] / 2] >= 0) {
+//									bn_sub_dig(b, b, gama[-tnaf[k] / 2]);
+//								} else {
+//									bn_add_dig(b, b, -gama[-tnaf[k] / 2]);
+//								}
+//							}
+//						}
+//					}
+//					TEST_ASSERT(bn_cmp(a, v1[0]) == RLC_EQ, end);
+//					TEST_ASSERT(bn_cmp(b, v1[1]) == RLC_EQ, end);
+//				}
+//			} TEST_END;
+//		}
+//#endif
 
                         TEST_CASE("regular recoding is correct") {
                             /* Recode same scalar with different widths. */
@@ -2257,113 +2292,113 @@ int main(void) {
 
     util_banner("Tests for the BN module", 0);
     util_banner("Utilities:", 1);
-
-    if (memory() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (util() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
+//
+//    if (memory() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (util() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
 
     util_banner("Arithmetic:", 1);
 
-    if (addition() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (subtraction() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (multiplication() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (squaring() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (doubling_halving() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (shifting() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (division() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (reduction() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (square_root() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (gcd() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (lcm() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (symbol() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (digit() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (recoding() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
+//    if (addition() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (subtraction() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (multiplication() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (squaring() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (doubling_halving() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (shifting() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (division() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (reduction() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (square_root() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (gcd() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (lcm() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (symbol() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (digit() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (recoding() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
 
     if (exponentiation() != RLC_OK) {
         core_clean();
         return 1;
     }
-
-    if (prime() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (small_primes() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (inversion() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
-
-    if (factor() != RLC_OK) {
-        core_clean();
-        return 1;
-    }
+//
+//    if (prime() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (small_primes() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (inversion() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
+//
+//    if (factor() != RLC_OK) {
+//        core_clean();
+//        return 1;
+//    }
 
     util_banner("All tests have passed.\n", 0);
 

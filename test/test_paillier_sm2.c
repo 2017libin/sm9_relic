@@ -17,9 +17,17 @@
 
 // ret = (a^b mod c - 1) // d
 void L_func(bn_t ret, bn_t a, bn_t b, bn_t c, bn_t d){
+    printf("a\n");
+    bn_print(a);
+    bn_print(b);
+    bn_print(c);
     bn_mxp(ret, a, b, c);
+    bn_print(ret);
+    printf("b\n");
     bn_sub_dig(ret, ret, 1);
+    printf("c\n");
     bn_div(ret, ret, d);
+    printf("d\n");
 }
 
 static ec_t R[256];
@@ -55,8 +63,12 @@ int cp_paillier_sm2_init(bn_t d){
     ec_curve_get_ord(n);
 
     // 1. 生成p1, p2
-    bn_rand(p1, RLC_POS, 512);
-    bn_rand(p2, RLC_POS, 512);
+    do {
+        bn_gen_prime(p1, 512);
+        bn_gen_prime(p2, 512);
+    } while (bn_is_even(p1) || bn_is_even(p2));
+//    bn_rand(p1, RLC_POS, 512);
+//    bn_rand(p2, RLC_POS, 512);
 
     // 2. 计算N=p1*p2, g=N+1, ld=lcm(p1-1,p2-1)
     bn_mul(N, p1, p2);
@@ -68,6 +80,11 @@ int cp_paillier_sm2_init(bn_t d){
     // 3. miu = L(g, ld, N^2, N)^-1 mod N
     bn_mul(N2, N, N);
     printf("1: L_func start!\n");
+    bn_print(miu);
+    bn_print(g);
+    bn_print(ld);
+    bn_print(N2);
+    bn_print(N);
     L_func(miu, g, ld, N2, N);
     printf("1: L_func after!\n");
     bn_mod_inv(miu, miu, N);
@@ -101,6 +118,17 @@ int cp_paillier_sm2_init(bn_t d){
 
     bn_mul(miu_t_mul, miu, tmp1);
     bn_mod(miu_t_mul, miu_t_mul, N);
+
+    bn_null(n);
+    bn_null(p1);
+    bn_null(p2);
+    bn_null(g);
+    bn_null(miu);
+    bn_null(ki);
+    bn_null(ri);
+    bn_null(N2);
+    bn_null(tmp1);
+    bn_null(tmp2);
 }
 
 int cp_paillier_sm2_gen(bn_t d, ec_t q) {
@@ -251,7 +279,6 @@ int cp_sm2_sig_t(bn_t r, bn_t s, uint8_t *msg, int len, int hash, bn_t d) {
                                 bn_mod(r, r, n);
                             } while (bn_is_zero(r));
 
-
                             // 3. s = ((1+d)^-1 * (k-rd)) mod n
                             bn_add_dig(s, d, 1);  // s = (1+d)
                             bn_mod_inv(s, s, n);  // s = (1+d)^-1
@@ -385,15 +412,19 @@ int main(void) {
     bn_new(s);
     ec_new(q);
 
+    util_banner("cp_paillier_sm2_gen:", 1);
     // 生成公私钥
     cp_paillier_sm2_gen(d, q);
 
+    util_banner("cp_paillier_sm2_sig:", 1);
     // 签名
     if(cp_paillier_sm2_sig(r, s, m, sizeof(m), 0) != RLC_OK){
         printf("签名过程出错！\n");
         core_clean();
         return 1;
     }
+
+    util_banner("cp_paillier_sm2_ver:", 1);
     if(cp_paillier_sm2_ver(r, s, m, sizeof(m), 0, q) == 1){
         printf("verify success!\n");
     }else{

@@ -204,6 +204,7 @@ void bn_mxp_slide(bn_t c, const bn_t a, const bn_t b, const bn_t m) {
 			}
 		}
 		bn_trim(r);
+
 #if BN_MOD == MONTY
 		bn_mod_monty_back(r, r, m);
 #endif

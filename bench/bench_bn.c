@@ -35,6 +35,7 @@
 static void memory(void) {
     bn_t a[BENCH];
 
+    // bn_null运行BENCH次进行性能测试
     BENCH_FEW("bn_null", bn_null(a[i]), 1);
 
     BENCH_FEW("bn_new", bn_new(a[i]), 1);
@@ -107,8 +108,10 @@ static void util(void) {
 
     bn_rand(b, RLC_POS, RLC_BN_BITS);
 
+    // 外循环的性能测试，运行次数为BENCH
     BENCH_RUN("bn_copy") {
             bn_rand(a, RLC_POS, RLC_BN_BITS);
+            // 内循环的性能测试，运行次数为BENCH
             BENCH_ADD(bn_copy(b, a));
         }
     BENCH_END;

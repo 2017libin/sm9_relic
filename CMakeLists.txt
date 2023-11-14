@@ -150,7 +150,7 @@ include(cmake/with.cmake)
 
 # Number of tests and benchmarks
 set(BENCH "100" CACHE STRING "Number of times each benchmark is ran.")
-set(TESTS "0" CACHE STRING "Number of times each test is ran.")
+set(TESTS "1" CACHE STRING "Number of times each test is ran.")
 
 
 # Number of cores.
@@ -359,7 +359,7 @@ install(FILES cmake/relic-config.cmake DESTINATION cmake/)
 #endif()
 
 if(TESTS GREATER 0)
-    message(${TESTS})
+    message("enable_testing !!")
     enable_testing()
     add_subdirectory(test)
 endif(TESTS GREATER 0)

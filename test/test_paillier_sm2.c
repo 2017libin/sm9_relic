@@ -17,17 +17,9 @@
 
 // ret = (a^b mod c - 1) // d
 void L_func(bn_t ret, bn_t a, bn_t b, bn_t c, bn_t d){
-    printf("a\n");
-    bn_print(a);
-    bn_print(b);
-    bn_print(c);
     bn_mxp(ret, a, b, c);
-    bn_print(ret);
-    printf("b\n");
     bn_sub_dig(ret, ret, 1);
-    printf("c\n");
     bn_div(ret, ret, d);
-    printf("d\n");
 }
 
 static ec_t R[256];
@@ -62,13 +54,11 @@ int cp_paillier_sm2_init(bn_t d){
 
     ec_curve_get_ord(n);
 
-    // 1. 生成p1, p2
+    // 1. 生成随机素数p1, p2
     do {
         bn_gen_prime(p1, 512);
         bn_gen_prime(p2, 512);
     } while (bn_is_even(p1) || bn_is_even(p2));
-//    bn_rand(p1, RLC_POS, 512);
-//    bn_rand(p2, RLC_POS, 512);
 
     // 2. 计算N=p1*p2, g=N+1, ld=lcm(p1-1,p2-1)
     bn_mul(N, p1, p2);
@@ -79,20 +69,15 @@ int cp_paillier_sm2_init(bn_t d){
 
     // 3. miu = L(g, ld, N^2, N)^-1 mod N
     bn_mul(N2, N, N);
-    printf("1: L_func start!\n");
-    bn_print(miu);
-    bn_print(g);
-    bn_print(ld);
-    bn_print(N2);
-    bn_print(N);
     L_func(miu, g, ld, N2, N);
-    printf("1: L_func after!\n");
+
     bn_mod_inv(miu, miu, N);
 
     // 4. 随机生成ki, ri, 并计算T1_i, R_i
     for (int i = 0; i < 256; ++i) {
-        bn_rand_mod(tmp1, n);
-        bn_rand_mod(tmp2, n);
+
+        bn_rand_mod(tmp1, n);  // tmp1 = ki
+        bn_rand_mod(tmp2, n);  // tmp2 = ri
         // T1[i] = g^ki * ri^N mod N2
         bn_mxp(T1[i], g, tmp1, N2);
         bn_mxp(tmp2, tmp2, N, N2);
@@ -105,17 +90,17 @@ int cp_paillier_sm2_init(bn_t d){
     // 5. 生成随机r，计算T2 = g^-d * r^N mod N2
     bn_rand_mod(tmp1, n);  // r
     bn_sub(tmp2, n, d);  // tmp2 = -d mod n
-    bn_mxp(T2, g, tmp2, N2);
-    bn_mxp(tmp1, tmp1, N, N2);
-    bn_mul_comba(T2, T2, tmp1);
+    bn_mxp(T2, g, tmp2, N2);  // g^-d mod N2
+    bn_mxp(tmp1, tmp1, N, N2);  // r^N mod N2
+    bn_mul(T2, T2, tmp1);
     bn_mod(T2, T2, N2);
+
 
     // 生成随机t，计算和保存d1_add_inv = (1+d)^-1 * t^-1, miu*t
     bn_rand_mod(tmp1, n);  // t
     bn_add_dig(d1_add_inv, d, 1);
     bn_mul(d1_add_inv, d1_add_inv, tmp1);
     bn_mod_inv(d1_add_inv, d1_add_inv, n);
-
     bn_mul(miu_t_mul, miu, tmp1);
     bn_mod(miu_t_mul, miu_t_mul, N);
 
@@ -141,8 +126,8 @@ int cp_paillier_sm2_gen(bn_t d, ec_t q) {
                         bn_new(n);
                         ec_curve_get_ord(n);
                         bn_rand_mod(d, n);
-                        cp_paillier_sm2_init(d);
                         ec_mul_gen(q, d);
+                        cp_paillier_sm2_init(d);
                     }
     RLC_CATCH_ANY {
             result = RLC_ERR;
@@ -158,78 +143,94 @@ int cp_paillier_sm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash){
     bn_t e, n, N2, tmp1, tmp2;
     ec_t kG;
     uint8_t e_bin[64];
+    int result = RLC_OK;
 
-    bn_new(n);
-    bn_new(N2);
-    bn_new(tmp1);
-    bn_new(tmp2);
-    bn_new(e);
+    bn_null(n);
+    bn_null(N2);
+    bn_null(tmp1);
+    bn_null(tmp2);
+    bn_null(e);
 
-    ec_set_infty(kG);
-    ep_curve_get_ord(n);
+    RLC_TRY {
+                        bn_new(n);
+                        bn_new(N2);
+                        bn_new(tmp1);
+                        bn_new(tmp2);
+                        bn_new(e);
 
-    bn_mul(N2, N, N);
+                        ep_curve_get_ord(n);
+                        bn_mul(N2, N, N);
 
-    // e = Hash(M)
-    if (!hash) {
-        md_map(e_bin, msg, len);
-        msg = e_bin;
-        len = RLC_MD_LEN;
-    }
-    if (8 * len > bn_bits(n)) {
-        len = RLC_CEIL(bn_bits(n), 8);
-        bn_read_bin(e, msg, len);
-        bn_rsh(e, e, 8 * len - bn_bits(n));
-    } else {
-        bn_read_bin(e, msg, len);
-    }
+                        // e = Hash(M)
+                        if (!hash) {
+                            md_map(e_bin, msg, len);
+                            msg = e_bin;
+                            len = RLC_MD_LEN;
+                        }
+                        if (8 * len > bn_bits(n)) {
+                            len = RLC_CEIL(bn_bits(n), 8);
+                            bn_read_bin(e, msg, len);
+                            bn_rsh(e, e, 8 * len - bn_bits(n));
+                        } else {
+                            bn_read_bin(e, msg, len);
+                        }
 
-    // 1. 计算 [k]G = \sum_{ei=1}R_i
-    for (int i = 0; i < len; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            if ((msg[i] >> j) & 1){
-                ec_add(kG, kG, R[i*8+j]);
-            }
+                        // 1. 计算 [k]G = \sum_{ei=1}R_i
+                        ec_set_infty(kG);
+                        for (int i = 0; i < len; ++i) {
+                            for (int j = 0; j < 8; ++j) {
+                                if ((msg[i] >> j) & 1){
+                                    ec_add(kG, kG, R[i*8+j]);
+                                }
+                            }
+                        }
+
+                        // 2. 计算 r = (x+e) mod n
+                        ec_norm(kG, kG);
+                        ec_get_x(tmp1, kG);
+                        bn_add(r, tmp1 ,e);
+                        bn_mod(r, r, n);
+
+                        // 3. 计算 S1=\prod_{ei=1}T1_i mod N2
+                        bn_set_dig(tmp1, 1);
+                        for (int i = 0; i < len; ++i) {
+                            for (int j = 0; j < 8; ++j) {
+                                if ((msg[i] >> j) & 1){
+                                    bn_mul(tmp1, tmp1, T1[i*8+j]);
+                                    bn_mod(tmp1, tmp1, N2);
+                                }
+                            }
+                        }
+
+                        // 4. 计算 S2=T2^r mod N2
+                        bn_mxp(tmp2, T2, r, N2);
+
+                        // 5. 计算 S3 = S1 * S2 mod N2
+                        bn_mul(tmp1, tmp1, tmp2);
+                        bn_mod(tmp1, tmp1, N2);
+
+                        // 6. 计算 s
+                        // 6.1 计算 tmp1 = L(S3, ld, N2, N) * ut mod N mod n
+                        L_func(tmp1, tmp1, ld, N2, N);
+                        bn_mul(tmp1, tmp1, miu_t_mul);
+                        bn_mod(tmp1, tmp1, N);
+                        bn_mod(tmp1, tmp1, n);
+
+                        // 6.2 计算 s = (1+d)^-1*t^-1 * tmp1 mod n
+                        bn_mul(s, d1_add_inv, tmp1);
+                        bn_mod(s, s, n);
+                    }
+    RLC_CATCH_ANY {
+            result = RLC_ERR;
         }
-    }
-
-    // 2. 计算 r = (x+e) mod n
-    ec_get_x(tmp1, kG);
-    bn_add(r, tmp1 ,e);
-    bn_mod(r, r, n);
-
-    // 3. 计算 S1=\prod_{ei=1}T1_i mod N2
-    bn_set_dig(tmp1, 1);
-    for (int i = 0; i < len; ++i) {
-        for (int j = 0; j < 8; ++j) {
-            if ((msg[i] >> j) & 1){
-                bn_mul(tmp1, tmp1, T1[i]);
-                bn_mod(tmp1, tmp1, N2);
-            }
+        RLC_FINALLY {
+            bn_free(n);
+            bn_free(N2);
+            bn_free(tmp1);
+            bn_free(tmp2);
+            bn_free(e);
         }
-    }
-
-    // 4. 计算 S2=T2^r mod N2
-    bn_mxp(tmp2, T2, r, N2);
-
-    // 5. 计算 S3 = S1 * S2 mod N2
-    bn_mul(tmp1, tmp1, tmp2);
-    bn_mod(tmp1, tmp1, N2);
-
-    // 6. 计算 s
-    // 6.1 计算 tmp1 = L(S3, ld, N2, N) * ut mod N mod n
-    printf("2: L_func start!\n");
-    L_func(tmp1, tmp1, ld, N2, N);
-    printf("2: L_func end!\n");
-    bn_mul(tmp1, tmp1, miu_t_mul);
-    bn_mod(tmp1, tmp1, N);
-    bn_mod(tmp1, tmp1, n);
-
-    // 6.2 计算 s = (1+d)^-1*t^-1 * tmp1 mod n
-    bn_mul(s, d1_add_inv, tmp1);
-    bn_mod(s, s, n);
-
-    return RLC_OK;
+    return result;
 }
 
 int cp_sm2_sig_t(bn_t r, bn_t s, uint8_t *msg, int len, int hash, bn_t d) {
@@ -345,7 +346,6 @@ int cp_paillier_sm2_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t q)
                                 } else {
                                     bn_read_bin(e, msg, len);
                                 }
-
                                 // 3. R = (e + x) mod n, (x,y) = [t]P+[s]G, t = r + s
                                 bn_add(t, r, s);
                                 bn_mod(t, t, n);
@@ -401,6 +401,7 @@ int main(void) {
     bn_t d, r, s;
     ec_t q;
     uint8_t m[5] = { 0, 1, 2, 3, 4 }, h[RLC_MD_LEN];
+    uint8_t m_test[1] = {0x11};
 
     bn_null(d);
     bn_null(r);

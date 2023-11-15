@@ -22,8 +22,11 @@ void L_func(bn_t ret, bn_t a, bn_t b, bn_t c, bn_t d){
     bn_div(ret, ret, d);
 }
 
+// 签名参数
 static ec_t R[256];
 static bn_t T1[256], N, T2, d1_add_inv, ld, miu_t_mul;
+// 验签参数
+static ec_t q;
 
 // 初始化签名参数
 int cp_paillier_sm2_init(bn_t d){
@@ -94,7 +97,6 @@ int cp_paillier_sm2_init(bn_t d){
     bn_mxp(tmp1, tmp1, N, N2);  // r^N mod N2
     bn_mul(T2, T2, tmp1);
     bn_mod(T2, T2, N2);
-
 
     // 生成随机t，计算和保存d1_add_inv = (1+d)^-1 * t^-1, miu*t
     bn_rand_mod(tmp1, n);  // t
@@ -382,6 +384,51 @@ int cp_paillier_sm2_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t q)
     return result;
 }
 
+void write_params(char *filename){
+    FILE *fd = fopen(filename, "wb");
+    if (fd == NULL){
+        perror("open file failed!");
+        exit(1);
+    }
+//    printf("per %d bytes , total %d bytes", sizeof(ec_t), sizeof(R));
+
+    // 写入参数
+    fwrite(R, sizeof(R), 1, fd);
+    fwrite(T1, sizeof(T1), 1, fd);
+    fwrite(N, sizeof(bn_t), 1, fd);
+    fwrite(T2, sizeof(bn_t), 1, fd);
+    fwrite(d1_add_inv, sizeof(bn_t), 1, fd);
+    fwrite(ld, sizeof(bn_t), 1, fd);
+    fwrite(miu_t_mul, sizeof(bn_t), 1, fd);
+    fwrite(q, sizeof(ec_t), 1, fd);
+
+    // 关闭文件
+    fclose(fd);
+}
+
+
+void read_params(char *filename){
+    FILE *fd = fopen(filename, "rb");
+    if (fd == NULL){
+        perror("open file failed!");
+        exit(1);
+    }
+//    printf("per %d bytes , total %d bytes", sizeof(ec_t), sizeof(R));
+
+    // 写入参数
+    fread(R, sizeof(R), 1, fd);
+    fread(T1, sizeof(T1), 1, fd);
+    fread(N, sizeof(bn_t), 1, fd);
+    fread(T2, sizeof(bn_t), 1, fd);
+    fread(d1_add_inv, sizeof(bn_t), 1, fd);
+    fread(ld, sizeof(bn_t), 1, fd);
+    fread(miu_t_mul, sizeof(bn_t), 1, fd);
+    fread(q, sizeof(ec_t), 1, fd);
+
+    // 关闭文件
+    fclose(fd);
+}
+
 int main(void) {
     // 为参数分配空间
     if (core_init() != RLC_OK) {
@@ -399,8 +446,8 @@ int main(void) {
 
     int code = RLC_ERR;
     bn_t d, r, s;
-    ec_t q;
-    uint8_t m[5] = { 0, 1, 2, 3, 4 }, h[RLC_MD_LEN];
+
+    uint8_t m[5] = { 1, 2, 3, 4, 0 }, h[RLC_MD_LEN];
     uint8_t m_test[1] = {0x11};
 
     bn_null(d);
@@ -415,15 +462,22 @@ int main(void) {
 
     util_banner("cp_paillier_sm2_gen:", 1);
     // 生成公私钥
-    cp_paillier_sm2_gen(d, q);
+//    cp_paillier_sm2_gen(d, q);
+    // 将签名和验签参数写入文件中
+//    write_params("params");
 
+    // 从文件中读取签名和验签参数
+    read_params("params");
     util_banner("cp_paillier_sm2_sig:", 1);
+
     // 签名
     if(cp_paillier_sm2_sig(r, s, m, sizeof(m), 0) != RLC_OK){
         printf("签名过程出错！\n");
         core_clean();
         return 1;
     }
+    bn_debug("r", r);
+    bn_debug("s", s);
 
     util_banner("cp_paillier_sm2_ver:", 1);
     if(cp_paillier_sm2_ver(r, s, m, sizeof(m), 0, q) == 1){

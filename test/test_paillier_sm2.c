@@ -25,7 +25,7 @@ void L_func(bn_t ret, bn_t a, bn_t b, bn_t c, bn_t d){
 // 签名参数
 static ec_t R[256];
 static bn_t T1[256], N, T2, d1_add_inv, ld, miu_t_mul;
-// 验签参数
+// 验签公钥
 static ec_t q;
 
 // 初始化签名参数
@@ -33,16 +33,6 @@ int cp_paillier_sm2_init(bn_t d){
 
     bn_t n, p1, p2, g, miu, ki, ri, N2, tmp1, tmp2;
     int result = RLC_OK;
-
-    for (int i = 0; i < 256; ++i) {
-        bn_new(T1[i]);
-    }
-
-    bn_new(N);
-    bn_new(T2);
-    bn_new(d1_add_inv);
-    bn_new(ld);
-    bn_new(miu_t_mul);
 
     bn_new(n);
     bn_new(p1);
@@ -118,14 +108,19 @@ int cp_paillier_sm2_init(bn_t d){
     bn_null(tmp2);
 }
 
-int cp_paillier_sm2_gen(bn_t d, ec_t q) {
+static int cp_paillier_sm2_gen_test() {
     bn_t n;
+    bn_t d;
+
     int result = RLC_OK;
 
     bn_null(n);
+    bn_null(d);
 
     RLC_TRY {
                         bn_new(n);
+                        bn_new(d);
+
                         ec_curve_get_ord(n);
                         bn_rand_mod(d, n);
                         ec_mul_gen(q, d);
@@ -384,7 +379,7 @@ int cp_paillier_sm2_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t q)
     return result;
 }
 
-void write_params(char *filename){
+void cp_paillier_sm2_write(char *filename){
     FILE *fd = fopen(filename, "wb");
     if (fd == NULL){
         perror("open file failed!");
@@ -407,7 +402,7 @@ void write_params(char *filename){
 }
 
 
-void read_params(char *filename){
+void cp_paillier_sm2_read(char *filename){
     FILE *fd = fopen(filename, "rb");
     if (fd == NULL){
         perror("open file failed!");
@@ -453,21 +448,18 @@ int main(void) {
     bn_null(d);
     bn_null(r);
     bn_null(s);
-    ec_null(q);
-
     bn_new(d);
     bn_new(r);
     bn_new(s);
-    ec_new(q);
 
     util_banner("cp_paillier_sm2_gen:", 1);
     // 生成公私钥
-//    cp_paillier_sm2_gen(d, q);
-    // 将签名和验签参数写入文件中
-//    write_params("params");
+//    cp_paillier_sm2_gen_test();
+//     将签名和验签参数写入文件中
+//    cp_paillier_sm2_write("params");
 
     // 从文件中读取签名和验签参数
-    read_params("params");
+    cp_paillier_sm2_read("params");
     util_banner("cp_paillier_sm2_sig:", 1);
 
     // 签名
@@ -491,5 +483,6 @@ int main(void) {
     bn_free(r);
     bn_free(s);
     ec_free(q);
+
     return 0;
 }

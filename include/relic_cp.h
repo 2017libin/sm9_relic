@@ -1145,6 +1145,39 @@ int cp_sm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash, bn_t d);
 int cp_sm2_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t q);
 
 /**
+ * Reads sign parameters from the file.
+ *
+ */
+void cp_paillier_wbsm2_read(char *filename);
+
+/**
+ * free the sign parameters.
+ *
+ */
+void cp_paillier_wbsm2_free();
+
+/**
+ * Generates sign and ver parameters.
+ *
+ * @param[out] filename	        - the file to save sign parameters.
+ * @param[out] q				- the public key.
+ * @return RLC_OK if no errors occurred, RLC_ERR otherwise.
+ */
+int cp_paillier_wbsm2_gen(char *filename, ec_t q);
+
+/**
+ * Signs a message using paillier WBSM2.
+ *
+ * @param[out] r			- the first component of the signature.
+ * @param[out] s			- the second component of the signature.
+ * @param[in] msg			- the message to sign.
+ * @param[in] len			- the message length in bytes.
+ * @param[in] hash			- the flag to indicate the message format.
+ * @return RLC_OK if no errors occurred, RLC_ERR otherwise.
+ */
+int cp_paillier_wbsm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash);
+
+/**
  * Generates an Elliptic Curve Schnorr Signature key pair.
  *
  * @param[out] d			- the private key.

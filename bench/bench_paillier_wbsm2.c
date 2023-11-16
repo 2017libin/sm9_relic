@@ -22,7 +22,7 @@ int main(void) {
     }
 
     int code = RLC_ERR;
-    bn_t r, s;
+    bn_t r, s, e;
     ec_t q;
 
     uint8_t m[5] = { 1, 2, 3, 4, 0 }, h[RLC_MD_LEN];
@@ -31,12 +31,14 @@ int main(void) {
     bn_null(r);
     bn_null(s);
     ec_null(q);
+    bn_null(e);
+
+    bn_new(e);
     bn_new(r);
     bn_new(s);
     ec_new(q);
 
-//    util_banner("cp_paillier_sm2_gen:", 1);
-//
+
     // 生成签名和验签参数
 //    cp_paillier_wbsm2_gen("wbsm2_sig_params", q);
 
@@ -45,14 +47,10 @@ int main(void) {
     cp_paillier_wbsm2_read("wbsm2_sig_params");
 
     // 性能测试
+    util_banner("paillier wbsm2 sig performance test:", 1);
+    bn_rand(e, RLC_POS, 256);
+    BENCH_ONE("cp_paillier_wbsm2_sig_with_hash", cp_paillier_wbsm2_sig_with_hash(r, s, e), 1);
     BENCH_ONE("cp_paillier_wbsm2_sig", cp_paillier_wbsm2_sig(r, s, m, sizeof(m), 0), 1);
-
-    // 签名
-    if(cp_paillier_wbsm2_sig(r, s, m, sizeof(m), 0) != RLC_OK){
-        printf("签名过程出错！\n");
-        core_clean();
-        return 1;
-    }
 
     // 清除签名参数的占用的内容（该步骤可省略）
     cp_paillier_wbsm2_free();

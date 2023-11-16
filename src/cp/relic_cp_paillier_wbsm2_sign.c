@@ -3,8 +3,6 @@
  * @Date: 2023/11/13 22:47
  * @Description:
  */
-#include "test_paillier_sm2.h"
-
 /**
  * @file
  *
@@ -67,26 +65,19 @@ static void L_func(bn_t ret, bn_t a, bn_t b, bn_t c, bn_t d){
 }
 
 int cp_paillier_wbsm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash){
-    bn_t e, n, N2, tmp1, tmp2;
-    ec_t kG;
+
+    bn_t e, n;
     uint8_t e_bin[64];
     int result = RLC_OK;
 
     bn_null(n);
-    bn_null(N2);
-    bn_null(tmp1);
-    bn_null(tmp2);
     bn_null(e);
 
     RLC_TRY {
                         bn_new(n);
-                        bn_new(N2);
-                        bn_new(tmp1);
-                        bn_new(tmp2);
                         bn_new(e);
 
                         ep_curve_get_ord(n);
-                        bn_mul(N2, N, N);
 
                         // e = Hash(M)
                         if (!hash) {
@@ -102,9 +93,52 @@ int cp_paillier_wbsm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash){
                             bn_read_bin(e, msg, len);
                         }
 
+                        result = cp_paillier_wbsm2_sig_with_hash(r, s, e);
+                    }
+    RLC_CATCH_ANY {
+            result = RLC_ERR;
+        }
+        RLC_FINALLY {
+            bn_free(n);
+            bn_free(e);
+        }
+    return result;
+}
+
+void print_hex(char * prefix, uint8_t * bytes, size_t len){
+    printf("%s: ", prefix);
+    for (int i = 0; i < len; ++i) {
+        printf("%02X ", bytes[i]);
+    }
+    printf("\n");
+}
+
+int cp_paillier_wbsm2_sig_with_hash(bn_t r, bn_t s, bn_t e){
+    bn_t n, N2, tmp1, tmp2;
+    ec_t kG;
+    int result = RLC_OK;
+    uint8_t msg[32];
+
+    bn_null(n);
+    bn_null(N2);
+    bn_null(tmp1);
+    bn_null(tmp2);
+
+    RLC_TRY {
+                        bn_new(n);
+                        bn_new(N2);
+                        bn_new(tmp1);
+                        bn_new(tmp2);
+
+                        ep_curve_get_ord(n);
+                        bn_mul(N2, N, N);
+
+                        // e = Hash(M)
+                        bn_write_bin(msg, 32, e);
+
                         // 1. 计算 [k]G = \sum_{ei=1}R_i
                         ec_set_infty(kG);
-                        for (int i = 0; i < len; ++i) {
+                        for (int i = 0; i < 32; ++i) {
                             for (int j = 0; j < 8; ++j) {
                                 if ((msg[i] >> j) & 1){
                                     ec_add(kG, kG, R[i*8+j]);
@@ -120,7 +154,7 @@ int cp_paillier_wbsm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash){
 
                         // 3. 计算 S1=\prod_{ei=1}T1_i mod N2
                         bn_set_dig(tmp1, 1);
-                        for (int i = 0; i < len; ++i) {
+                        for (int i = 0; i < 32; ++i) {
                             for (int j = 0; j < 8; ++j) {
                                 if ((msg[i] >> j) & 1){
                                     bn_mul(tmp1, tmp1, T1[i*8+j]);

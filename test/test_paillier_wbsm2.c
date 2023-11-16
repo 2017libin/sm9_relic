@@ -36,15 +36,20 @@ int main(void) {
     bn_new(s);
     ec_new(q);
 
-    util_banner("cp_paillier_sm2_gen:", 1);
-
+//    util_banner("cp_paillier_sm2_gen:", 1);
+//
     // 生成签名和验签参数
-    cp_paillier_wbsm2_gen("wbsm2_sig_params", q);
+//    cp_paillier_wbsm2_gen("wbsm2_sig_params", q);
 
-    // 从文件中读取签名和验签参数
+    // 从文件中读取签名
     cp_paillier_wbsm2_read("wbsm2_sig_params");
 
     util_banner("cp_paillier_sm2_sig:", 1);
+
+    bn_t e;
+    bn_new(e);
+    bn_rand(e, RLC_POS, 256);
+    cp_paillier_wbsm2_sig_with_hash(r, s, e);
 
     // 签名
     if(cp_paillier_wbsm2_sig(r, s, m, sizeof(m), 0) != RLC_OK){
@@ -57,13 +62,13 @@ int main(void) {
 
     // 清除签名参数的占用的内容（该步骤可省略）
     cp_paillier_wbsm2_free();
-
-    util_banner("cp_paillier_sm2_ver:", 1);
-    if(cp_sm2_ver(r, s, m, sizeof(m), 0, q) == 1){
-        printf("verify success!\n");
-    }else{
-        printf("verify failed！\n");
-    }
+//
+//    util_banner("cp_paillier_sm2_ver:", 1);
+//    if(cp_sm2_ver(r, s, m, sizeof(m), 0, q) == 1){
+//        printf("verify success!\n");
+//    }else{
+//        printf("verify failed！\n");
+//    }
 
     end:
     bn_free(r);

@@ -17,6 +17,7 @@ if (WITH_BN)
     ADD_MODULE(bn)
 endif(WITH_BN)
 
+ADD_MODULE(paillier_wbsm2)
 #if (WITH_DV)
 #    ADD_MODULE(dv)
 #endif(WITH_DV)

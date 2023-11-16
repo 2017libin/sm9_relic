@@ -108,6 +108,65 @@ int cp_sm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash, bn_t d) {
     return result;
 }
 
+// e = hash(m)
+int cp_sm2_sig_with_hash(bn_t r, bn_t s, bn_t e, bn_t d) {
+    bn_t n, k, x;
+    bn_t tmp;
+    ec_t p;
+    uint8_t h[RLC_MD_LEN];
+    int result = RLC_OK;
+
+    bn_null(n);
+    bn_null(k);
+    bn_null(x);
+    bn_null(tmp);
+    ec_null(p);
+
+    RLC_TRY {
+                        bn_new(n);
+                        bn_new(k);
+                        bn_new(x);
+                        bn_new(tmp);
+                        ec_new(p);
+
+                        ec_curve_get_ord(n);
+                        do {
+                            // 1. e = Hash(M)
+
+                            // 2. (x1, y1) = [k]G, r = (e + x1) mod n
+                            do {
+                                bn_rand_mod(k, n);
+                                ec_mul_gen(p, k);  // p = [k]G
+                                ec_get_x(x, p);
+                                bn_add(r, x, e);
+                                bn_mod(r, r, n);
+                            } while (bn_is_zero(r));
+
+                            // 3. s = ((1+d)^-1 * (k-rd)) mod n
+                            bn_add_dig(s, d, 1);  // s = (1+d)
+                            bn_mod_inv(s, s, n);  // s = (1+d)^-1
+                            bn_mul(tmp, r, d);            // tmp = rd
+                            bn_mod(tmp, tmp, n);
+                            bn_sub(tmp, k, tmp);  // tmp = k-rd
+                            bn_mod(tmp, tmp, n);
+                            bn_mul(s, s, tmp);            // s = ((1+d)^-1 * (k-rd)) mod n
+                            bn_mod(s, s, n);
+
+                        } while (bn_is_zero(s));
+                    }
+    RLC_CATCH_ANY {
+            result = RLC_ERR;
+        }
+        RLC_FINALLY {
+            bn_free(n);
+            bn_free(k);
+            bn_free(x);
+            bn_free(tmp);
+            ec_free(p);
+        }
+    return result;
+}
+
 int cp_sm2_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t q) {
     bn_t n, t, e, R;
     ec_t p;

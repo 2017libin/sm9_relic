@@ -49,8 +49,8 @@ int main(void) {
     // 性能测试
     util_banner("paillier wbsm2 sig performance test:", 1);
     bn_rand(e, RLC_POS, 256);
-    BENCH_ONE("cp_paillier_wbsm2_sig_with_hash", cp_paillier_wbsm2_sig_with_hash(r, s, e), 1);
-    BENCH_ONE("cp_paillier_wbsm2_sig", cp_paillier_wbsm2_sig(r, s, m, sizeof(m), 0), 1);
+    BENCH_FEW("cp_paillier_wbsm2_sig_with_hash", cp_paillier_wbsm2_sig_with_hash(r, s, e), 1);
+    BENCH_FEW("cp_paillier_wbsm2_sig", cp_paillier_wbsm2_sig(r, s, m, sizeof(m), 0), 1);
 
     // 清除签名参数的占用的内容（该步骤可省略）
     cp_paillier_wbsm2_free();

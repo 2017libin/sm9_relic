@@ -1,8 +1,11 @@
+# 安装relic
+1. mkdir build && cd build && cmake .. && make install -j8
 # tigress 混淆代码步骤
 1. 产生混淆代码paillier_wbsm2_obs.c：`bash tigress_paillier_wbsm2.sh`
 2. 删除混淆代码中的main函数
 3. 使用main.c对调用混淆代码中的签名函数
 4. 将main.c和paillier_wbsm2_obs.c一起编译成可执行文件：`gcc -o obs main.c paillier_wbsm2_obs.c -lrelic_s`
+   1. 动态链接执行会出错，暂未解决
 5. 执行程序：`./obs`
 ```c
 //

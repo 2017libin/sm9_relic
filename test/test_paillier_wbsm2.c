@@ -39,7 +39,7 @@ int main(void) {
 //    util_banner("cp_paillier_sm2_gen:", 1);
 //
     // 生成签名和验签参数
-//    cp_paillier_wbsm2_gen("wbsm2_sig_params", q);
+    cp_paillier_wbsm2_gen("wbsm2_sig_params", q);
 
     // 从文件中读取签名
     cp_paillier_wbsm2_read("wbsm2_sig_params");

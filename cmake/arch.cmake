@@ -44,6 +44,8 @@ if(NOT WSIZE)
     endif()
 endif()
 
+set(WSIZE 32)
+
 set(WSIZE ${WSIZE} CACHE STRING "Processor word size")
 
 if(NOT ALIGN)

@@ -86,6 +86,7 @@ enum {
     PRIME_H2ADC,
     /** Curve25519 255-bit prime modulus. */
     PRIME_25519,
+    SM2_256,
     /** NIST 256-bit fast reduction polynomial. */
     NIST_256,
     /** Brainpool random 256-bit prime. */

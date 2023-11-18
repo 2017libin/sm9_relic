@@ -225,11 +225,11 @@
  * Parameters for the SM2 P-256 prime elliptic curve.
  */
 /** @{ */
-#define SM2_P256_A		"FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC"
-#define SM2_P256_B		"28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F512AB8F92DDBCBD414D940E93"
-#define SM2_P256_X		"32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7"
-#define SM2_P256_Y		"BC3736AXF4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0"
-#define SM2_P256_R		"FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123"
+#define SM2_P256_A		"787968B4FA32C3FD2417842E73BBFEFF2F3C848B6831D7E0EC65228B3937E498"
+#define SM2_P256_B		"63E4C6D3B23B0C849CF84241484BFE48F61D59A5B16BA06E6E12D1DA27C5249A"
+#define SM2_P256_X		"421DEBD61B62EAB6746434EBC3CC315E32220B3BADD50BDC4C4E6C147FEDD43D"
+#define SM2_P256_Y		"0680512BCBB42C07D47349D2153B70C4E5D7FDFCBFA36EA1A85841B9E46E09A2"
+#define SM2_P256_R		"8542D69E4C044F18E8B92435BF6FF7DD297720630485628D5AE74EE7C32E79B7"
 #define SM2_P256_H		"1"
 #define SM2_P256_MAPU   "-A"
 /** @} */
@@ -939,6 +939,10 @@ void ep_param_set(int param) {
 				break;
 #endif
 #if defined(EP_PLAIN) && FP_PRIME == 256
+                            case SM2_P256:
+                            ASSIGN(SM2_P256, SM2_256);
+                                plain = 1;
+                                break;
                             case NIST_P256:
                             ASSIGN(NIST_P256, NIST_256);
                                 plain = 1;
@@ -1126,7 +1130,6 @@ void ep_param_set(int param) {
 #if defined(EP_ENDOM)
                         if (endom) {
                             switch(pairf) {
-
                                 /* beta = (-1+sqrt(-3))/2, lambda = 36*u^3 + 18*u^2 + 6*u + 1 */
                                 case EP_BN:
                                     fp_set_dig(beta, 3);
@@ -1273,7 +1276,8 @@ int ep_param_set_any_plain(void) {
 #elif FP_PRIME == 255
     ep_param_set(CURVE_25519);
 #elif FP_PRIME == 256
-    ep_param_set(NIST_P256);
+    ep_param_set(SM2_P256);
+//    ep_param_set(NIST_P256);
 #elif FP_PRIME == 382
     ep_param_set(CURVE_67254);
 #elif FP_PRIME == 383
@@ -1368,6 +1372,7 @@ int ep_param_set_any_super(void) {
 }
 
 int ep_param_set_any_pairf(void) {
+    printf("ep_param_set_any_pairf\n");
     int type = 0, degree = 0, r = RLC_OK;
 #if defined(EP_ENDOM)
 #if FP_PRIME == 158
@@ -1379,7 +1384,7 @@ int ep_param_set_any_pairf(void) {
 	type = RLC_EP_DTYPE;
 	degree = 2;
 #elif FP_PRIME == 256
-    ep_param_set(SM9_P256);
+    ep_param_set(SM2_P256);
     type = RLC_EP_MTYPE;
     degree = 2;
 #elif FP_PRIME == 315

@@ -48,7 +48,7 @@
  * Random prime modulus for the Brainpool P256r1.
  */
 #define STR_P256	"A9FB57DBA1EEA9BC3E660A909D838D726E3BF623D52620282013481D1F6E5377"
-
+#define STR_SM2     "8542D69E4C044F18E8B92435BF6FF7DE457283915C45517D722EDB8B08F1DFC3"
 #elif FP_PRIME == 544
 /**
  * Random prime modulus for the Cocks-Pinch curve of embedding degree 8.
@@ -221,6 +221,10 @@ void fp_param_set(int param) {
 				f[4] = 256;
 				fp_prime_set_pmers(f, 5);
 				break;
+            case SM2_256:
+                bn_read_str(p, STR_SM2, strlen(STR_SM2), 16);
+                fp_prime_set_dense(p);
+                break;
 			case BSI_256:
 				bn_read_str(p, STR_P256, strlen(STR_P256), 16);
 				fp_prime_set_dense(p);

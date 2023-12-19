@@ -14,6 +14,7 @@ macro(ADD_MODULE MODULE)
 endmacro(ADD_MODULE)
 
 ADD_MODULE(sm9_pairing)
+ADD_MODULE(ecs_sm2)
 ADD_MODULE(paillier_sm2)
 ADD_MODULE(paillier_wbsm2)
 ADD_MODULE(sm2_sign)

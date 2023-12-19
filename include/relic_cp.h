@@ -1155,6 +1155,13 @@ int cp_sm2_sig_with_hash(bn_t r, bn_t s, bn_t e, bn_t d);
  */
 int cp_sm2_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t q);
 
+int cp_ecs_sm2_master_gen(bn_t d, ec_t q);
+int cp_ecs_sm2_user_gen(bn_t d, ec_t q, bn_t ms);
+int cp_ecs_sm2_sig(bn_t r, bn_t s, uint8_t *msg, int len, int hash, bn_t d);
+int cp_ecs_sm2_sig_with_hash(bn_t r, bn_t s, bn_t e, bn_t d);
+int cp_ecs_sm2_ver(bn_t r, bn_t s, uint8_t *msg, int len, int hash, ec_t Ppub, ec_t WA);
+
+
 /**
  * Reads sign parameters from the file.
  *

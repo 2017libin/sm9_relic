@@ -319,7 +319,7 @@ if(ARITH STREQUAL "fiat")
     message(STATUS "Configured Fiat-Crypto: After build completes, set FIAT_CRYPTO to root folder and run: make fiat; cmake; make.")
 endif()
 
-set(CMAKE_C_FLAGS "-O3 ${AFLAGS} ${WFLAGS} ${DFLAGS} ${PFLAGS} ${CFLAGS}")
+set(CMAKE_C_FLAGS "-O2 ${AFLAGS} ${WFLAGS} ${DFLAGS} ${PFLAGS} ${CFLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${LFLAGS}")
 
 message(STATUS "Compiler flags: ${CMAKE_C_FLAGS}")
